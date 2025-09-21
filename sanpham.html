@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công ty Vật tư Nông nghiệp | Phân bón - Thuốc BVTV - Giống cây trồng</title>
+    <!-- Load Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Load Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Load CSS tùy chỉnh của bạn -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+
+    <style>
+        /* Grid cha */
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            /* responsive */
+            gap: 20px;
+        }
+        /* Mỗi card sản phẩm */
+        
+        .product-card {
+            display: block;
+            /* Cho phép thẻ a bao trọn */
+            text-align: center;
+            border-radius: 15px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        /* Tên, giá, số lượng */
+        
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+        
+        .product-price,
+        .product-quantity {
+            font-size: 0.95rem;
+            color: #3b9304;
+            margin-bottom: 4px;
+        }
+        
+        .product-price span,
+        .product-quantity span {
+            font-weight: bold;
+            color: #3b9304;
+        }
+        
+        .category-item {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+            height: 240px;
+            /* hoặc tùy chiều cao bạn muốn */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .category-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* ảnh phủ toàn bộ không méo */
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+        
+        .category-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .category-item p {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* nền mờ trắng cho chữ nổi bật */
+            margin: 0;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+        
+        .pagination .page-link {
+            color: #333;
+            border-radius: 8px;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
+            border-color: #bbb;
+            text-decoration: none;
+        }
+        
+        .pagination .active .page-link {
+            background-color: #ff4b2b;
+            border-color: #ff4b2b;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(255, 75, 43, 0.3);
+        }
+        
+        .pagination .disabled .page-link {
+            color: #aaa;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+        
+        #heroCarousel .carousel-item {
+            height: 500px;
+            /* hoặc cao hơn tùy thiết kế */
+        }
+        
+        #heroCarousel .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Giữ tỷ lệ, lấp đầy khung */
+        }
+        .product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.product-card img {
+    height: 200px;
+    object-fit: contain;
+    background-color: #f9f9f9;
+}
+.product-name {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4em;
+    height: 2.8em; /* giới hạn 2 dòng */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+.product-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #3b9304; /* đỏ giống tiki */
+}
+.product-card .btn {
+    background-color: #3b9304;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+}
+/* Hiệu ứng hover cho card sản phẩm */
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px); /* nổi lên nhẹ */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Nút thêm giỏ hàng */
+.btn-add-to-cart {
+    background-color: #3b9304;
+    border: 1px solid #3b9304;
+    color: #fff !important;   /* ép màu chữ trắng */
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Khi hover vào nút */
+.btn-add-to-cart:hover {
+    background-color: #fff !important;
+    color: #3b9304 !important;   /* ép chữ xanh lá */
+    border: 1px solid #3b9304 !important;
+}
+.pagination {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .pagination .page-item {
+        margin: 0 3px;
+      }
+
+      .pagination .page-link {
+        color: #333;
+        border-radius: 8px;
+        padding: 8px 14px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .pagination .page-link:hover {
+        background-color: #f8f9fa;
+        border-color: #28a745; /* xanh lá */
+        text-decoration: none;
+      }
+
+      .pagination .active .page-link {
+        background-color: #28a745; /* xanh lá */
+        border-color: #28a745;
+        color: white;
+        font-weight: bold;
+      }
+
+      .pagination .disabled .page-link {
+        color: #aaa;
+        background-color: #f5f5f5;
+        border-color: #ddd;
+        cursor: not-allowed;
+      }
+
+    </style>
+</head>
+
+<body>
+    <!-- Header Top -->
+    <th:block th:include="Common/Header.html"></th:block>
+    <!-- Main Content -->
+    <main class="container px-0">
+        <!-- Banner Carousel -->
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img th:src="@{/img/banner_nn.jpg}" class="d-block w-100" alt="Banner 1">
+                </div>
+                <div class="carousel-item">
+                    <img th:src="@{/img/banner_nn.jpg}" class="d-block w-100" alt="Banner 2">
+                </div>
+                <div class="carousel-item">
+                    <img th:src="@{/img/banner_nn2.jpg}" class="d-block w-100" alt="Banner 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+        </div>
+    </main>
+    <div class="container my-5">
+        <!-- Categories -->
+        <div class="row">
+            <div class="col-6 col-md-4 col-lg-2" th:each="cate : ${categories}">
+                <a th:href="@{/category/{id}(id=${cate.id})}" class="text-decoration-none">
+                    <div class="category-item">
+                        <!-- <img th:src="@{/img/{img}(img=${cate.image != null ? cate.image : 'default.png'})}" th:alt="${cate.name}"> -->
+                        <p class="mb-0" th:text="${cate.name}"></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+
+        <!-- Featured Products -->
+        <section class="featured-products">
+            <div class="section-title">
+                <h2 class="mb-0">
+                    <i class="fas fa-star me-2"></i>SẢN PHẨM
+                </h2>
+                <!-- <a href="#" class="d-none d-md-block">Xem tất cả <i
+						class="fas fa-chevron-right ms-1"></i></a> -->
+            </div>
+
+            <!-- Price Filter Form -->
+            <form action="/products" method="get" class="mb-4">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <input type="number" name="minPrice" class="form-control" placeholder="Giá tối thiểu" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" name="maxPrice" class="form-control" placeholder="Giá tối đa" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">Tìm
+								kiếm</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Product Grid -->
+<div class="container mt-4">
+    <div class="row g-3">
+        <div class="col-md-3 col-sm-6" th:each="product : ${products}">
+            <a th:href="@{/product/{id}(id=${product.id})}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <img th:src="@{/img/{image}(image=${product.image != null ? product.image : 'default.png'})}" 
+                         class="card-img-top p-3" alt="Sản phẩm">
+
+                    <div class="card-body px-3 pb-3">
+                        <!-- Tên sản phẩm (giống tiki, tối đa 2 dòng) -->
+                        <h6 class="card-title product-name text-dark" 
+                            th:text="${product.name}"></h6>
+
+                        <!-- Giá -->
+                        <p class="card-text product-price mb-1">
+                            <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </p>
+
+                        <!-- Button mua -->
+                         <form th:action="@{/cart/add}" method="get">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+                            <input type="hidden" name="quantity" value="1">
+                            <div class="action-buttons">
+                                <button type="submit" class="btn-add-to-cart btn btn-sm w-100 mt-2"><i class="fas fa-shopping-cart me-1"></i> Thêm vào giỏ
+                        </button></button>
+                            </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(pageNo=${currentPage - 1})}">«</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link" th:href="@{/(pageNo=${i})}" th:text="${i}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(pageNo=${currentPage + 1})}">»</a>
+                        </li>
+                    </ul>
+                </nav>
+
+
+
+
+
+
+
+
+
+        </section>
+        </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <h3>VỀ CHÚNG TÔI</h3>
+                        <p>Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+                        </p>
+                        <div class="social-links d-flex gap-3 mt-3">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+							class="fab fa-youtube"></i></a> <a href="#"><i
+							class="fab fa-zalo"></i></a> <a href="#"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <h3>DANH MỤC</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#">Trang chủ</a></li>
+                            <li class="mb-2"><a href="#">Phân bón</a></li>
+                            <li class="mb-2"><a href="#">Thuốc BVTV</a></li>
+                            <li class="mb-2"><a href="#">Giống cây trồng</a></li>
+                            <li class="mb-2"><a href="#">Vật tư nông nghiệp</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <h3>CHÍNH SÁCH</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#">Chính sách bảo mật</a></li>
+                            <li class="mb-2"><a href="#">Chính sách vận chuyển</a></li>
+                            <li class="mb-2"><a href="#">Chính sách đổi trả</a></li>
+                            <li class="mb-2"><a href="#">Điều khoản dịch vụ</a></li>
+                            <li class="mb-2"><a href="#">Hướng dẫn mua hàng</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <h3>LIÊN HỆ</h3>
+                        <div class="contact-item d-flex mb-3">
+                            <i class="fas fa-map-marker-alt mt-1"></i> <span>123 Đường
+							Nông Nghiệp, P. Phú Thọ, TP. Thủ Dầu Một, Bình Dương</span>
+                        </div>
+                        <div class="contact-item d-flex mb-3">
+                            <i class="fas fa-phone-alt mt-1"></i> <span>0901 234 567 -
+							0909 876 543</span>
+                        </div>
+                        <div class="contact-item d-flex mb-3">
+                            <i class="fas fa-envelope mt-1"></i> <span>info@nongnghiep.vn</span>
+                        </div>
+                        <div class="contact-item d-flex">
+                            <i class="fas fa-clock mt-1"></i> <span>Thứ 2 - Thứ 7: 7:30
+							- 17:30</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copyright pt-4 mt-4 text-center">
+                    <p class="mb-0">&copy; 2023 Công ty Vật tư Nông nghiệp. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

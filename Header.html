@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công ty Vật tư Nông nghiệp | Phân bón - Thuốc BVTV - Giống cây trồng</title>
+    <!-- Load Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Load Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Load CSS tùy chỉnh của bạn -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* Menu link mặc định */
+header nav a {
+    color: #333; /* đen mặc định */
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Khi hover đổi sang xanh lá */
+header nav a:hover {
+    color: #28a745 !important; /* xanh lá */
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- Header thông báo -->
+    <div class="bg-light py-1 text-center">
+        <marquee class="fw-bold text-success">Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+        </marquee>
+    </div>
+
+    <!-- Header Top -->
+    <div class="header-top bg-light py-2 border-bottom">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Thông tin liên hệ -->
+                <div class="contact-info d-flex gap-3 text-secondary small">
+                    <span><i class="fas fa-phone-alt me-1"></i> 0901 234 567</span>
+                    <span><i class="fas fa-envelope me-1"></i> info@nongnghiep.vn</span>
+                </div>
+
+                <!-- Tài khoản -->
+                <div class="user-actions d-flex align-items-center gap-3">
+                    <!-- Nếu chưa đăng nhập -->
+                    <th:block th:if="${session.fullName == null}">
+                        <a class="text-decoration-none text-dark" th:href="@{/dangnhap}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+                        </a>
+                        <a class="text-decoration-none text-dark" th:href="@{/dangky}">
+                            <i class="fas fa-user-plus me-1"></i> Đăng ký
+                        </a>
+                    </th:block>
+
+                    <!-- Nếu đã đăng nhập -->
+<th:block th:if="${session.fullName != null}">
+    <a class="text-dark text-decoration-none" th:href="@{/profile}">
+        <i class="fas fa-user me-1"></i> Xin chào, 
+        <strong th:text="${session.fullName}">Người dùng</strong>
+    </a>
+
+    <a class="text-decoration-none text-dark" th:href="@{/logout}">
+        <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+    </a>
+
+    <!-- Chỉ hiện nếu là admin -->
+    <a class="text-decoration-none text-dark" th:if="${session.admin}" th:href="@{/admin/index}">
+        <i class="fas fa-user-shield me-1"></i> Quản trị
+    </a>
+</th:block>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Main Header -->
+    <!-- Header Gọn -->
+<header class="border-bottom py-2">
+  <div class="container d-flex align-items-center justify-content-between">
+    
+    <!-- Logo -->
+    <div class="d-flex align-items-center">
+      <img th:src="@{/img/logo1.jpg}" alt="Logo" style="height: 35px; margin-right: 8px;">
+      <span class="fw-bold text-success fs-5">FarmFresh</span>
+    </div>
+
+    <!-- Menu -->
+    <nav class="d-flex gap-4 ms-4">
+      <a class="text-dark text-decoration-none" th:href="@{/}">Trang chủ</a>
+      <a class="text-dark text-decoration-none" th:href="@{/sanpham}">Sản phẩm</a>
+      <a class="text-dark text-decoration-none" th:href="@{/lienhe}">Liên hệ</a>
+      <a class="text-dark text-decoration-none" th:href="@{/news}">Tin tức</a>
+      <a class="text-dark text-decoration-none" th:href="@{/gioithieu}">Giới thiệu</a>
+      <a class="text-dark text-decoration-none" th:href="@{/gopy}">Góp ý</a>
+      
+    </nav>
+
+    <!-- Search + Cart + User -->
+    <div class="d-flex align-items-center gap-3">
+      <!-- Search -->
+      <div class="position-relative">
+        <input type="text" class="form-control rounded-pill ps-3 pe-5" placeholder="Tìm kiếm sản phẩm..." style="height:36px; min-width:220px;">
+        <i class="fas fa-search position-absolute top-50 end-0 translate-middle-y me-3 text-secondary"></i>
+      </div>
+
+      <!-- Cart -->
+      <a th:href="@{/cart/view}" class="position-relative text-dark">
+        <i class="fas fa-shopping-cart fs-5"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success"
+              th:text="${session.cartCount != null ? session.cartCount : 0}">0</span>
+      </a>
+
+</header>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

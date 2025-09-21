@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<title>Đăng nhập - FarmFresh</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-green: #347434;
+        --light-green: #f2f8f2;
+        --border-green: #d0e7d0;
+        --text-dark: #0e1b0e;
+        --text-light: #4e974e;
+        --accent-brown: #a58674;
+      }
+      body {
+        font-family: 'Public Sans', sans-serif;
+      }
+    </style>
+</head>
+
+<body>
+    <th:block th:include="Common/Header.html"></th:block>
+    <div>
+        <div class="container d-flex justify-content-center align-items-center vh-100">
+                <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="w-full max-w-md space-y-8">
+<div class="bg-white p-8 shadow-lg rounded-2xl border border-[var(--border-green)]">
+<div class="text-center">
+<h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">
+                Chào mừng trở lại!
+              </h2>
+<p class="mt-2 text-sm text-[var(--text-light)]">
+                Đăng nhập để tiếp tục với FarmFresh.
+              </p>
+</div>
+<!-- Thông báo lỗi -->
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                    <p th:text="${errorMessage}"></p>
+                </div>
+
+                <!-- Thông báo thành công -->
+                <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                    <p th:text="${successMessage}"></p>
+                </div>
+
+                <div th:if="${successMessage1}" class="alert alert-success" role="alert">
+                    <p th:text="${successMessage1}"></p>
+                </div>
+
+
+                <div th:if="${param.error}" class="alert alert-danger">Thông tin đăng nhập không đúng!</div>
+                <div th:if="${param.logout}" class="alert alert-success">Bạn đã đăng xuất thành công!</div>
+<form th:action="@{/login1}" method="post" action="#" class="mt-8 space-y-6">
+<input name="remember" type="hidden" value="true"/>
+<div class="rounded-md shadow-sm -space-y-px">
+<div>
+<label class="sr-only" for="email-address">Email</label>
+<input autocomplete="email" class="appearance-none rounded-none relative block w-full px-3 py-3 border border-[var(--border-green)] placeholder-gray-400 text-gray-900 rounded-t-md focus:outline-none focus:ring-[var(--primary-green)] focus:border-[var(--primary-green)] focus:z-10 sm:text-sm bg-[var(--light-green)]" id="email-address" name="email" placeholder="Địa chỉ email" required="" type="email"/>
+</div>
+<div>
+<label class="sr-only" for="password">Mật khẩu</label>
+<input autocomplete="current-password" class="appearance-none rounded-none relative block w-full px-3 py-3 border border-[var(--border-green)] placeholder-gray-400 text-gray-900 rounded-b-md focus:outline-none focus:ring-[var(--primary-green)] focus:border-[var(--primary-green)] focus:z-10 sm:text-sm bg-[var(--light-green)]" id="password" name="password" placeholder="Mật khẩu" required="" type="password"/>
+</div>
+</div>
+<!-- Hiển thị lỗi -->
+                    <div class="alert alert-danger" role="alert" style="display: none;" id="errorMessage">
+                        <!-- Error message will be inserted here -->
+                    </div>
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<input class="h-4 w-4 text-[var(--primary-green)] focus:ring-[var(--primary-green)] border-gray-300 rounded" id="remember-me" name="remember-me" type="checkbox"/>
+<label class="ml-2 block text-sm text-gray-900" for="remember-me">
+                    Ghi nhớ tôi
+                  </label>
+</div>
+<div class="text-sm">
+<a th:href="@{/doimatkhau}" class="font-medium text-[var(--primary-green)] hover:text-green-700" href="#">
+                    Quên mật khẩu?
+                  </a>
+</div>
+</div>
+<div>
+<button class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[var(--primary-green)] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors" type="submit">
+                  Đăng nhập
+                </button>
+</div>
+</form>
+<p class="mt-8 text-center text-sm text-[var(--text-light)]">
+              Chưa có tài khoản?
+              <a th:href="@{/dangky}" class="font-medium text-[var(--primary-green)] hover:text-green-700" href="#">
+                Đăng ký ngay
+              </a>
+</p>
+</div>
+</div>
+</main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <h3>VỀ CHÚNG TÔI</h3>
+                    <p>Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+                    </p>
+                    <div class="social-links d-flex gap-3 mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+							class="fab fa-youtube"></i></a> <a href="#"><i
+							class="fab fa-zalo"></i></a> <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>DANH MỤC</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Trang chủ</a></li>
+                        <li class="mb-2"><a href="#">Phân bón</a></li>
+                        <li class="mb-2"><a href="#">Thuốc BVTV</a></li>
+                        <li class="mb-2"><a href="#">Giống cây trồng</a></li>
+                        <li class="mb-2"><a href="#">Vật tư nông nghiệp</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>CHÍNH SÁCH</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Chính sách bảo mật</a></li>
+                        <li class="mb-2"><a href="#">Chính sách vận chuyển</a></li>
+                        <li class="mb-2"><a href="#">Chính sách đổi trả</a></li>
+                        <li class="mb-2"><a href="#">Điều khoản dịch vụ</a></li>
+                        <li class="mb-2"><a href="#">Hướng dẫn mua hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>LIÊN HỆ</h3>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-map-marker-alt mt-1"></i> <span>123 Đường
+							Nông Nghiệp, P. Phú Thọ, TP. Thủ Dầu Một, Bình Dương</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-phone-alt mt-1"></i> <span>0901 234 567 -
+							0909 876 543</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-envelope mt-1"></i> <span>info@nongnghiep.vn</span>
+                    </div>
+                    <div class="contact-item d-flex">
+                        <i class="fas fa-clock mt-1"></i> <span>Thứ 2 - Thứ 7: 7:30
+							- 17:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright pt-4 mt-4 text-center">
+                <p class="mb-0">&copy; 2023 Công ty Vật tư Nông nghiệp. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
