@@ -1,264 +1,478 @@
 <!DOCTYPE html>
-<html lang="vi"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
-<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-<title>FarmFresh - Nông nghiệp xanh</title>
-<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<style type="text/tailwindcss">
-      :root {
-        --primary-color: #2E7D32;
-        --secondary-color: #F8F9F8;--accent-color: #6D4C41;
-        --text-color: #1B201A;
-        --background-color: #FFFFFF;--card-bg: #FFFFFF;
-        --light-brown: #F5F1E9;
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công ty Vật tư Nông nghiệp | Phân bón - Thuốc BVTV - Giống cây trồng</title>
+    <!-- Load Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Load Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Load CSS tùy chỉnh của bạn -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+
+    <style>
+        /* Grid cha */
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            /* responsive */
+            gap: 20px;
+        }
+        /* Mỗi card sản phẩm */
+        
+        .product-card {
+            display: block;
+            /* Cho phép thẻ a bao trọn */
+            text-align: center;
+            border-radius: 15px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        /* Tên, giá, số lượng */
+        
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+        
+        .product-price,
+        .product-quantity {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        
+        .product-price span,
+        .product-quantity span {
+            font-weight: bold;
+            color: #3b9304;
+        }
+        
+        .category-item {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+            height: 240px;
+            /* hoặc tùy chiều cao bạn muốn */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .category-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* ảnh phủ toàn bộ không méo */
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+        
+        .category-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .category-item p {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* nền mờ trắng cho chữ nổi bật */
+            margin: 0;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+        
+        .pagination .page-link {
+            color: #333;
+            border-radius: 8px;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
+            border-color: #bbb;
+            text-decoration: none;
+        }
+        
+        .pagination .active .page-link {
+            background-color: #ff4b2b;
+            border-color: #ff4b2b;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(255, 75, 43, 0.3);
+        }
+        
+        .pagination .disabled .page-link {
+            color: #aaa;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+        
+        #heroCarousel .carousel-item {
+            height: 500px;
+            /* hoặc cao hơn tùy thiết kế */
+        }
+        
+        #heroCarousel .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Giữ tỷ lệ, lấp đầy khung */
+        }
+        
+        .product-card .product-image {
+            width: 100%;
+            /* chiếm toàn bộ chiều ngang card */
+            height: 220px;
+            /* cố định chiều cao */
+            object-fit: cover;
+            /* giữ tỷ lệ, cắt thừa cho vừa khung */
+            border-radius: 10px;
+            /* bo góc đẹp hơn */
+            margin-bottom: 10px;
+        }
+        .product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.product-card img {
+    height: 200px;
+    object-fit: contain;
+    background-color: #f9f9f9;
+}
+.product-name {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4em;
+    height: 2.8em; /* giới hạn 2 dòng */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+.product-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #3b9304; /* đỏ giống tiki */
+}
+.product-card .btn {
+    background-color: #3b9304;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+}
+/* Hiệu ứng hover cho card sản phẩm */
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px); /* nổi lên nhẹ */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Nút thêm giỏ hàng */
+.btn-add-to-cart {
+    background-color: #3b9304;
+    border: 1px solid #3b9304;
+    color: #fff !important;   /* ép màu chữ trắng */
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Khi hover vào nút */
+.btn-add-to-cart:hover {
+    background-color: #fff !important;
+    color: #3b9304 !important;   /* ép chữ xanh lá */
+    border: 1px solid #3b9304 !important;
+}
+.pagination {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding-left: 0;
       }
-      body {
-        font-family: 'Public Sans', sans-serif;
+
+      .pagination .page-item {
+        margin: 0 3px;
       }
-      .hover-lift {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      .pagination .page-link {
+        color: #333;
+        border-radius: 8px;
+        padding: 8px 14px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        transition: all 0.2s ease-in-out;
       }
-      .hover-lift:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 24px rgba(46, 125, 50, 0.15);
+
+      .pagination .page-link:hover {
+        background-color: #f8f9fa;
+        border-color: #28a745; /* xanh lá */
+        text-decoration: none;
+      }
+
+      .pagination .active .page-link {
+        background-color: #28a745; /* xanh lá */
+        border-color: #28a745;
+        color: white;
+        font-weight: bold;
+      }
+
+      .pagination .disabled .page-link {
+        color: #aaa;
+        background-color: #f5f5f5;
+        border-color: #ddd;
+        cursor: not-allowed;
       }
     </style>
 </head>
-<body class="bg-[var(--background-color)] text-[var(--text-color)]">
-<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-<div class="layout-container flex h-full grow flex-col">
-<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
-<div class="container mx-auto flex items-center justify-between whitespace-nowrap px-6 py-4">
-<div class="flex items-center gap-8">
-<a class="flex items-center gap-3 text-[var(--primary-color)]" href="#">
-<span class="material-symbols-outlined text-4xl">eco</span>
-<h1 class="text-2xl font-bold tracking-tighter">FarmFresh</h1>
-</a>
-<nav class="hidden lg:flex items-center gap-6">
-<a class="text-base font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors" href="#">Trang chủ</a>
-<a class="text-base font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors" href="#">Sản phẩm</a>
-<a class="text-base font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors" href="#">Khuyến mãi</a>
-<a class="text-base font-medium text-gray-700 hover:text-[var(--primary-color)] transition-colors" href="#">Tin tức</a>
-</nav>
+
+<body>
+    <!-- Header Top -->
+    <th:block th:include="Common/Header.html"></th:block>
+
+    <!-- Main Content -->
+    <main class="container px-0">
+        <!-- Banner Carousel -->
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img th:src="@{/img/banner_nn.jpg}" class="d-block w-100" alt="Banner 1">
+                </div>
+                <div class="carousel-item">
+                    <img th:src="@{/img/banner_nn.jpg}" class="d-block w-100" alt="Banner 2">
+                </div>
+                <div class="carousel-item">
+                    <img th:src="@{/img/banner_nn2.jpg}" class="d-block w-100" alt="Banner 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+        </div>
+
+        <div class="container my-5">
+            <!-- Categories -->
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-2" th:each="cate : ${categories}">
+                    <a th:href="@{/category/{id}(id=${cate.id})}" class="text-decoration-none">
+                        <div class="category-item">
+                            <!-- <img th:src="@{/img/{img}(img=${cate.image != null ? cate.image : 'default.png'})}" th:alt="${cate.name}"> -->
+                            <p class="mb-0" th:text="${cate.name}"></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- Featured Products -->
+            <section class="featured-products">
+                <div class="section-title">
+                    <h2 class="mb-0">
+                        <i class="fas fa-star me-2"></i>SẢN PHẨM NỔI BẬT
+                    </h2>
+                    <a href="#" class="d-none d-md-block">Xem tất cả <i
+						class="fas fa-chevron-right ms-1"></i></a>
+                </div>
+
+                <!-- Price Filter Form -->
+                <form action="/products" method="get" class="mb-4">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="number" name="minPrice" class="form-control" placeholder="Giá tối thiểu" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" name="maxPrice" class="form-control" placeholder="Giá tối đa" required>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">Tìm
+								kiếm</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Product Grid -->
+                <h3 class="mt-4">🔥 Sản phẩm bán chạy</h3>
+                <!-- Product Grid -->
+<div class="container mt-4">
+    <div class="row g-3">
+        <div class="col-md-3 col-sm-6" th:each="product : ${bestSellers}">
+            <a th:href="@{/product/{id}(id=${product.id})}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <img th:src="@{/img/{image}(image=${product.image != null ? product.image : 'default.png'})}" 
+                         class="card-img-top p-3" alt="Sản phẩm">
+
+                    <div class="card-body px-3 pb-3">
+                        <!-- Tên sản phẩm (giống tiki, tối đa 2 dòng) -->
+                        <h6 class="card-title product-name text-dark" 
+                            th:text="${product.name}"></h6>
+
+                        <!-- Giá -->
+                        <p class="card-text product-price mb-1">
+                            <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </p>
+
+                        <!-- Button mua -->
+                         <form th:action="@{/cart/add}" method="get">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+                            <input type="hidden" name="quantity" value="1">
+                            <div class="action-buttons">
+                                <button type="submit" class="btn-add-to-cart btn btn-sm w-100 mt-2"><i class="fas fa-shopping-cart me-1"></i> Thêm vào giỏ
+                        </button></button>
+                            </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
-<div class="flex items-center gap-4">
-<label class="relative hidden sm:block">
-<span class="sr-only">Tìm kiếm</span>
-<span class="absolute inset-y-0 left-0 flex items-center pl-3">
-<span class="material-symbols-outlined text-gray-500">search</span>
-</span>
-<input class="form-input block w-full rounded-full border-gray-300 bg-gray-100 py-2 pl-10 pr-4 text-sm focus:border-green-500 focus:ring-green-500" placeholder="Tìm kiếm sản phẩm..." type="text"/>
-</label>
-<button aria-label="Giỏ hàng" class="relative flex items-center justify-center rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-[var(--primary-color)] transition-colors">
-<span class="material-symbols-outlined">shopping_cart</span>
-<span class="absolute top-0 right-0 -mt-1 -mr-1 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--primary-color)] text-xs text-white">3</span>
-</button>
-<div class="flex items-center gap-2">
-<a class="hidden md:inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors" href="#">Đăng nhập</a>
-<a class="inline-flex items-center justify-center rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" href="#">Đăng ký</a>
-</div>
-<button class="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
-<span class="material-symbols-outlined">menu</span>
-</button>
-</div>
-</div>
-</header>
-<main class="flex-1">
-<section class="relative h-[600px] bg-cover bg-center" style='background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCsMoy6SAgwna0CHcyxKbz1O0a3cRRjlfSy4qfz94lTO-o-wAHbrESdbl8sF0OvcnRnoAae2_RH_QQU3rV67mcYxWkL2feG1xtHtujo855AkTw_-dK86XPnoEjnyHiwQbxUR5n46obIFax9AN-CaFlu4ZjV3djPjXdX_WAZ6HrtrEdXPTgOwP_QX6RWR3cQd-xgVnuHl2SvXLFQyVuYedU_w8O8XOzgLtMX8wvkYBNqgtCHrvJpdht8sZsIGJewVUfC38Cpkm8_Ens");'>
-<div class="absolute inset-0 flex items-center justify-center text-center text-white">
-<div class="max-w-3xl px-4">
-<h1 class="text-4xl font-black leading-tight tracking-tight md:text-6xl">
-                  Nâng tầm Nông nghiệp Việt
-                </h1>
-<p class="mt-4 text-lg md:text-xl font-light">
-                  Giải pháp toàn diện, sản phẩm chất lượng cho một mùa vụ bội thu và bền vững.
-                </p>
-<a class="mt-8 inline-block rounded-full bg-[var(--primary-color)] px-10 py-4 text-lg font-bold text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:bg-green-700" href="#">
-                  Khám phá ngay
-                </a>
-</div>
-</div>
-</section>
-<section class="py-16 sm:py-24 bg-white" id="categories">
-<div class="container mx-auto px-6">
-<div class="text-center mb-12">
-<h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Danh mục Sản phẩm</h2>
-<p class="mt-4 text-lg text-gray-600">Tìm kiếm mọi thứ bạn cần cho nông trại của mình.</p>
-</div>
-<div class="grid grid-cols-2 gap-6 md:grid-cols-4 lg:gap-8">
-<a class="group text-center" href="#">
-<div class="w-full h-40 sm:h-56 overflow-hidden rounded-xl">
-<img alt="Phân bón" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlXW2Nd2YURjY2MZOIDtWwJP7Hr6wrhm-rf_eGeYMzwX2J_O5t25e_hX5_7MhSGY8nGN3pYeHktT2zmgvUkDc6j43znsnVP3sPQHtFrxCRbhTzLxYuuvcQlA80l2zUQrgOkEXWugepxOIRcDzS8xLxOLxE-EcU9AXStRcK-Csyn2rgMTTZ1PH1I8B6s2IROZTrfU4trIqshTE2IToWVrj1ntcPJe2kqJQIK03dF_fw3yIbfGMfMFS7msOtd9GgZ6zJTBjVeUQ3gk8"/>
-</div>
-<h3 class="mt-4 text-lg font-semibold text-gray-800 group-hover:text-[var(--primary-color)]">Phân bón</h3>
-</a>
-<a class="group text-center" href="#">
-<div class="w-full h-40 sm:h-56 overflow-hidden rounded-xl">
-<img alt="Thuốc BVTV" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAjayIk84Fnl2IIy3qjOrxwNW_oCcDidtHb7U2nGmGNqZRfMdVuP36zaYC033eWMeUOVwEGuyAXiluI5y77kbXomP7CwcF8DfveE1yRA-RXnLuTdq8bWxymriZNERLMylbGy7x8fjPt4XYjdxwFR0gys2ebnDlM0okCafDO9EUdijsyF2m7U3n76Y-JBRGNePPA9Ni4oupCuMzIWrqYmOgQ8MRzPU5-w0sl1NXcSGHq0hE_w2a43ZoxxrNgpwdJ3zm2hTu37wba60"/>
-</div>
-<h3 class="mt-4 text-lg font-semibold text-gray-800 group-hover:text-[var(--primary-color)]">Thuốc BVTV</h3>
-</a>
-<a class="group text-center" href="#">
-<div class="w-full h-40 sm:h-56 overflow-hidden rounded-xl">
-<img alt="Giống cây trồng" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKvdkqY8UmIn0d8WD9iGNK0mRAhnerlAEv1k3QOYEIYDS7QxMhDvw9KRBAQ3SvIIIeDvYmiwqY629Tmyk3j_nI9M3d_M6uodhwyXGJ8JDtt9llJRRirWYy5LeZFJH8_B-WELn2OIY21VBDLtRtB-7rkk5rwNMNFLqghQqDPOQ-Vspwl4DD-Vg3SAH819O5DXog0ppvwJo0VyVY2V4GEiNtl5Clh4ONfYyk6bRfnY5WssxGG5b4E06ES2K4p8vg58VxC_4Qrto_KRQ"/>
-</div>
-<h3 class="mt-4 text-lg font-semibold text-gray-800 group-hover:text-[var(--primary-color)]">Giống cây trồng</h3>
-</a>
-<a class="group text-center" href="#">
-<div class="w-full h-40 sm:h-56 overflow-hidden rounded-xl">
-<img alt="Dụng cụ nông nghiệp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_CsN_N-vniJcibgZYa9FOk7wV5c2p5CIcyJmEMEScCK-tDgq4ZNgAnbxEeMUfgLNzjZvEZK-b3MYrFLMP0ktvlq_0evAVz69kBmn4o3OJCwH-yy3oaGjLCl7EojJifeFV0v41ZvP6zMRCZJVfKGhkH-AxaWEfp-kbB-WZ3dyEW_72OcmCcE-E7leMq9oNHmRw3syU6PbdhmwL45aqac23NBuEZWO3eqtvQKjr1e-EQhgTrQzPtPJ1S6B_K_qG0JUzVrnkz923gfY"/>
-</div>
-<h3 class="mt-4 text-lg font-semibold text-gray-800 group-hover:text-[var(--primary-color)]">Dụng cụ nông nghiệp</h3>
-</a>
-</div>
-</div>
-</section>
-<section class="py-16 sm:py-24 bg-[var(--light-brown)]" id="featured-products">
-<div class="container mx-auto px-6">
-<div class="text-center mb-12">
-<h2 class="text-4xl font-bold tracking-tight text-[var(--accent-color)] sm:text-5xl">Sản phẩm Nổi bật</h2>
-<p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Những sản phẩm được bà con tin dùng nhiều nhất, giúp mang lại vụ mùa bội thu.</p>
-</div>
-<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-<div class="group flex flex-col overflow-hidden rounded-2xl bg-[var(--card-bg)] shadow-lg hover-lift">
-<div class="h-64 overflow-hidden">
-<img alt="Phân bón hữu cơ" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeKZ5yopB-VsjohX4l64sEjkrpXHp6ix85i1V52prv0qrpQNKnC426sJr3S4nJUk5cD9NvyWdsNHWIbreMh7lPAWqux4fyfV-ZkzJ-FnSeznWeHcN3EOHSt_p9-DWhWdbOuMCAoJDoxNssVYfXjirDc7r88QBEvgytct_dm58uSOVm0POFOFkt5597_RnJ3bZX4bpzqsYUH8YJtpziwLNefO8yl8cAD_q1ZwdQb0Pr-PYqiP_Yak1oRxmbXxON5fKYLnMRuVQIK2U"/>
-</div>
-<div class="flex-1 p-6 flex flex-col justify-between">
-<div>
-<h3 class="text-xl font-bold text-gray-800">Phân bón hữu cơ</h3>
-<p class="mt-2 text-lg font-semibold text-[var(--primary-color)]">150.000đ</p>
-</div>
-<div class="mt-6 space-y-3">
-<a class="flex w-full items-center justify-center rounded-lg bg-[var(--primary-color)] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-green-700" href="#">Thêm vào giỏ hàng</a>
-<a class="flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors duration-300 hover:bg-gray-50 hover:border-gray-400" href="#">Xem chi tiết</a>
-</div>
-</div>
-</div>
-<div class="group flex flex-col overflow-hidden rounded-2xl bg-[var(--card-bg)] shadow-lg hover-lift">
-<div class="h-64 overflow-hidden">
-<img alt="Thuốc trừ sâu sinh học" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDziD4jJ18lAbCgvuJjrtSvktsnbnS4AmWpt7aQl3e-_9kh2_iWTb_GTIiTbVQ7ENe3n9UiGDUhoskb2zCePnNxBMRuQwoRhLrQR5uptKx6ilc43Psvdv2FNy7w2zbJ0d1VSU9DZmR7zM9J0yQTAfkOzAHyNrzGpey-XYWzxMT7BnWb8IlPOxmBuE9_TvUoTUeSa5r3dvhMnTyTmsYZx7autn71hcK7dWMmxFGvjc9igUSf_gPblL-AnVCfQFxabNjiiJBvGiBZ8Po"/>
-</div>
-<div class="flex-1 p-6 flex flex-col justify-between">
-<div>
-<h3 class="text-xl font-bold text-gray-800">Thuốc trừ sâu sinh học</h3>
-<p class="mt-2 text-lg font-semibold text-[var(--primary-color)]">80.000đ</p>
-</div>
-<div class="mt-6 space-y-3">
-<a class="flex w-full items-center justify-center rounded-lg bg-[var(--primary-color)] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-green-700" href="#">Thêm vào giỏ hàng</a>
-<a class="flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors duration-300 hover:bg-gray-50 hover:border-gray-400" href="#">Xem chi tiết</a>
-</div>
-</div>
-</div>
-<div class="group flex flex-col overflow-hidden rounded-2xl bg-[var(--card-bg)] shadow-lg hover-lift">
-<div class="h-64 overflow-hidden">
-<img alt="Giống lúa chất lượng cao" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG2orhHzN9iDlNxTdGGLlDZG61HZDOnBXgeGLFTSaV6wqjruBFRpeZ4Xl20eQaJNOAl7g68bOUX3ysx0Ar8ZUNEyk0UMa5O4nlaKCBKA6EMBkJvr0-HTbCN3q-YeBiDdEZhJEqC3b5FI_ynZvQS-fgn_PhYTpteag7bcHvzNaMYOA_GptGfepu5_8ViBWRF6tDpXf7UUDoASru77zs9bj6wAsVDaMtBASpufzGHnpdBVl1E-N_pCanuVfQ4W7CfGIUqYZ7kMXsO4k"/>
-</div>
-<div class="flex-1 p-6 flex flex-col justify-between">
-<div>
-<h3 class="text-xl font-bold text-gray-800">Giống lúa chất lượng cao</h3>
-<p class="mt-2 text-lg font-semibold text-[var(--primary-color)]">200.000đ</p>
-</div>
-<div class="mt-6 space-y-3">
-<a class="flex w-full items-center justify-center rounded-lg bg-[var(--primary-color)] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-green-700" href="#">Thêm vào giỏ hàng</a>
-<a class="flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors duration-300 hover:bg-gray-50 hover:border-gray-400" href="#">Xem chi tiết</a>
-</div>
-</div>
-</div>
-<div class="group flex flex-col overflow-hidden rounded-2xl bg-[var(--card-bg)] shadow-lg hover-lift">
-<div class="h-64 overflow-hidden">
-<img alt="Bình xịt điện" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAka3XLlO1jPidnMGNGeSZuF3HBhettBL7_d059bKJHa_M9W9qrqZ-J54xqK_-WPhax7cnP8fqK9SRtNHupulkYpRHXS1p4Pzo23Yittw8UQX638ITyL1vlgiEeFjfyAu7FfPEAXEc1gZnqi3Iwtf6fCbRvyvHm6q0Zj10qRP-pRjCmU72KzjW8NUCzQ-JCOSrAf1ADJ7bS6jr7-yjc8yYl9cdtmqhy705clsyR5lNFjhxVbBuMO6iN9guo3ixx7Cb8StfRxKWV3C0"/>
-</div>
-<div class="flex-1 p-6 flex flex-col justify-between">
-<div>
-<h3 class="text-xl font-bold text-gray-800">Bình xịt điện 20L</h3>
-<p class="mt-2 text-lg font-semibold text-[var(--primary-color)]">550.000đ</p>
-</div>
-<div class="mt-6 space-y-3">
-<a class="flex w-full items-center justify-center rounded-lg bg-[var(--primary-color)] px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-green-700" href="#">Thêm vào giỏ hàng</a>
-<a class="flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors duration-300 hover:bg-gray-50 hover:border-gray-400" href="#">Xem chi tiết</a>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section class="py-16 sm:py-24 bg-white" id="news">
-<div class="container mx-auto px-6">
-<div class="text-center mb-12">
-<h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Tin tức &amp; Mẹo Nông nghiệp</h2>
-<p class="mt-4 text-lg text-gray-600">Cập nhật kiến thức và kỹ thuật canh tác hiệu quả.</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-<a class="group flex flex-col sm:flex-row items-center gap-6" href="#">
-<div class="sm:w-1/3 h-48 w-full overflow-hidden rounded-xl">
-<img alt="Tin tức nông nghiệp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2ToFyJbSopeeLQjwdu5dMz4o-DeL2aNutMSpwCe9Z3jNf1_Vl2oKxDtV9grFTfoY-ZqLRZZQYr1hjfVuUjAJtODlbgQGiC5q4BcKinon8a-lm-d_XAAxl5CQgBCBijxnF42AMNuJ0gNYXOI3u2E9RbaK0iORx_YzxuTfq2sdstUdfkZgK4b4Qm3PfL7jgmiS1eCHi0sqGUkUs771sdQl9p_g52XySe4DhLX640JFO1QUAJQJitQugBR_PsWmaQKOV0ako2T07qQA"/>
-</div>
-<div class="sm:w-2/3">
-<p class="text-sm font-semibold text-[var(--primary-color)]">TIN TỨC</p>
-<h3 class="mt-2 text-xl font-bold text-gray-900 group-hover:text-gray-600">Kỹ thuật canh tác lúa mới nhất cho năng suất vượt trội</h3>
-<p class="mt-3 text-base text-gray-500">Cập nhật các phương pháp canh tác tiên tiến nhất để tăng năng suất và chất lượng hạt gạo.</p>
-</div>
-</a>
-<a class="group flex flex-col sm:flex-row items-center gap-6" href="#">
-<div class="sm:w-1/3 h-48 w-full overflow-hidden rounded-xl">
-<img alt="Mẹo nông nghiệp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQZxHW-7mcVToJPbOdWnrbT6KO2EUeqkAa2sm4n2G8ax0Tntvx-tLAkaNH7PCE3GgzhMe75SxcM0eKW5LKal2JkH0LmSHHJ-jSZ2M0KNEI-QFhOEYKbWISztWe6gDgPgFZ57e2GLdtz_5YeLC89hm_VvsTX69DyPeVOY2wu6V6tktLBmAteDAfUt5DaqgHI-2NCvvh__bhJSPgRjXOw4EFVDCLtUOXETj4sKVHRF4EAVcY-eiNjh-ALhMaidWXfu2h1I6phuYqA0s"/>
-</div>
-<div class="sm:w-2/3">
-<p class="text-sm font-semibold text-[var(--primary-color)]">MẸO HAY</p>
-<h3 class="mt-2 text-xl font-bold text-gray-900 group-hover:text-gray-600">Chăm sóc cây trồng hiệu quả trong mùa khô hạn</h3>
-<p class="mt-3 text-base text-gray-500">Hướng dẫn chi tiết về cách tưới tiêu, bón phân và bảo vệ cây trồng khỏi điều kiện thời tiết khắc nghiệt.</p>
-</div>
-</a>
-</div>
-</div>
-</section>
-</main>
-<footer class="bg-[var(--accent-color)] text-white">
-<div class="container mx-auto px-6 py-12">
-<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
-<div>
-<h3 class="text-lg font-semibold">FarmFresh</h3>
-<p class="mt-2 text-gray-300">Cung cấp giải pháp nông nghiệp bền vững. </p>
-</div>
-<div>
-<h3 class="text-lg font-semibold">Sản phẩm</h3>
-<ul class="mt-4 space-y-2">
-<li><a class="text-gray-300 hover:text-white" href="#">Phân bón</a></li>
-<li><a class="text-gray-300 hover:text-white" href="#">Thuốc BVTV</a></li>
-<li><a class="text-gray-300 hover:text-white" href="#">Giống cây trồng</a></li>
-<li><a class="text-gray-300 hover:text-white" href="#">Dụng cụ</a></li>
-</ul>
-</div>
-<div>
-<h3 class="text-lg font-semibold">Về chúng tôi</h3>
-<ul class="mt-4 space-y-2">
-<li><a class="text-gray-300 hover:text-white" href="#">Giới thiệu</a></li>
-<li><a class="text-gray-300 hover:text-white" href="#">Liên hệ</a></li>
-<li><a class="text-gray-300 hover:text-white" href="#">Chính sách</a></li>
-</ul>
-</div>
-<div>
-<h3 class="text-lg font-semibold">Kết nối với FarmFresh</h3>
-<div class="flex mt-4 space-x-4">
-<a class="text-gray-300 hover:text-white" href="#">
-<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.59 0 0 .59 0 1.325v21.351C0 23.41.59 24 1.325 24H12.82v-9.29h-3.098v-3.622h3.098V7.513c0-3.073 1.839-4.782 4.654-4.782.899 0 1.849.067 2.083.1v3.25h-1.918c-1.493 0-1.933.712-1.933 1.868v2.296h3.633l-.485 3.622h-3.148V24h5.537c.735 0 1.325-.59 1.325-1.325V1.325C24 .59 23.41 0 22.675 0z"></path></svg>
-</a>
-<a class="text-gray-300 hover:text-white" href="#">
-<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12c0 5.514 4.486 10 10 10s10-4.486 10-10c0-5.514-4.486-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-12h2v6h-2zm0 8h2v2h-2z"></path></svg>
-</a>
-</div>
-</div>
-</div>
-<div class="mt-12 border-t border-gray-700 pt-8 text-center text-gray-400">
-<p>© 2024 FarmFresh. Đã đăng ký bản quyền.</p>
-</div>
-</div>
-</footer>
-</div>
-</div>
-</body></html>
+
+
+
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(pageNo=${currentPage - 1})}">«</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link" th:href="@{/(pageNo=${i})}" th:text="${i}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(pageNo=${currentPage + 1})}">»</a>
+                        </li>
+                    </ul>
+                </nav>
+
+
+
+
+
+
+
+
+
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <h3>VỀ CHÚNG TÔI</h3>
+                    <p>Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+                    </p>
+                    <div class="social-links d-flex gap-3 mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+							class="fab fa-youtube"></i></a> <a href="#"><i
+							class="fab fa-zalo"></i></a> <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>DANH MỤC</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Trang chủ</a></li>
+                        <li class="mb-2"><a href="#">Phân bón</a></li>
+                        <li class="mb-2"><a href="#">Thuốc BVTV</a></li>
+                        <li class="mb-2"><a href="#">Giống cây trồng</a></li>
+                        <li class="mb-2"><a href="#">Vật tư nông nghiệp</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>CHÍNH SÁCH</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Chính sách bảo mật</a></li>
+                        <li class="mb-2"><a href="#">Chính sách vận chuyển</a></li>
+                        <li class="mb-2"><a href="#">Chính sách đổi trả</a></li>
+                        <li class="mb-2"><a href="#">Điều khoản dịch vụ</a></li>
+                        <li class="mb-2"><a href="#">Hướng dẫn mua hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>LIÊN HỆ</h3>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-map-marker-alt mt-1"></i> <span>123 Đường
+							Nông Nghiệp, P. Phú Thọ, TP. Thủ Dầu Một, Bình Dương</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-phone-alt mt-1"></i> <span>0901 234 567 -
+							0909 876 543</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-envelope mt-1"></i> <span>info@nongnghiep.vn</span>
+                    </div>
+                    <div class="contact-item d-flex">
+                        <i class="fas fa-clock mt-1"></i> <span>Thứ 2 - Thứ 7: 7:30
+							- 17:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright pt-4 mt-4 text-center">
+                <p class="mb-0">&copy; 2023 Công ty Vật tư Nông nghiệp. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
