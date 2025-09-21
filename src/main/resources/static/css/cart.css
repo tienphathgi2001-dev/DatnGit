@@ -1,0 +1,109 @@
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Marquee */
+.marquee-container marquee {
+    font-size: 1.1rem;
+}
+
+/* Navbar */
+.navbar {
+    transition: all 0.3s ease;
+}
+.navbar .nav-link {
+    color: #333;
+    transition: color 0.3s ease;
+}
+.navbar .nav-link:hover {
+    color: #007bff;
+}
+.search-form {
+    display: none;
+    transition: all 0.3s ease;
+}
+.search-input {
+    border-radius: 20px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.cart-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Cart Table */
+.cart-table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.cart-table th, .cart-table td {
+    vertical-align: middle;
+}
+.cart-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.cart-img:hover {
+    transform: scale(1.1);
+}
+.quantity-form {
+    max-width: 150px;
+}
+.quantity-btn {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    transition: background-color 0.3s ease;
+}
+.quantity-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+.quantity-input {
+    width: 50px;
+    border: none;
+    background-color: transparent;
+}
+.remove-btn {
+    transition: background-color 0.3s ease;
+}
+.remove-btn:hover {
+    background-color: #dc3545;
+    transform: scale(1.05);
+}
+
+/* Buttons */
+.back-btn, .checkout-btn {
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.back-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+.checkout-btn:hover {
+    background-color: #28a745;
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #343a40, #212529);
+}
+footer a {
+    font-size: 1.5rem;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+footer a:hover {
+    color: #007bff;
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Lịch sử mua hàng</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+
+<body>
+
+    <th:block th:include="Common/Header.html"></th:block>
+
+    <div class="container">
+        <h2>📦 Lịch sử mua hàng</h2>
+
+        <!-- Nếu không có đơn hàng -->
+        <div th:if="${#lists.isEmpty(orders)}">
+            <p>Bạn chưa có đơn hàng nào.</p>
+        </div>
+
+        <form th:action="@{/user/orders}" method="get" class="mb-3 d-flex justify-content-center gap-2">
+            <input type="date" name="fromDate" th:value="${fromDate}" class="form-control" placeholder="Từ ngày">
+            <input type="date" name="toDate" th:value="${toDate}" class="form-control" placeholder="Đến ngày">
+            <button type="submit" class="btn btn-primary">Tìm</button>
+        </form>
+
+        <!-- Bảng đơn hàng -->
+        <table class="table table-striped" th:if="${!#lists.isEmpty(orders)}">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.code}"></td>
+                    <td th:text="${#dates.format(order.createdDate, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#numbers.formatDecimal(order.total, 0, 'POINT', 0, 'COMMA')} + ' đ'"></td>
+                    <td>
+                        <span th:switch="${order.status}">
+                        <span th:case="0" class="text-danger">Đã hủy</span>
+                        <span th:case="4" class="text-success">Đã giao</span>
+                        <span th:case="*">Không xác định</span>
+                        </span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{'/user/orders/' + ${order.id}}" class="btn btn-sm btn-primary">Xem</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <!-- Card view cho mobile -->
+        <!-- <div th:each="order : ${orders.content}" class="order-card">
+            <p><strong>Mã đơn:</strong> <span th:text="${order.code}"></span></p>
+            <p><strong>Ngày đặt:</strong> <span th:text="${#dates.format(order.createdDate, 'dd/MM/yyyy HH:mm')}"></span></p>
+            <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(order.total, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span></p>
+            <p><strong>Trạng thái:</strong> <span th:text="${order.status}"></span></p>
+            <a th:href="@{'/user/orders/' + ${order.id}}" class="btn btn-sm btn-primary">Xem</a>
+        </div> -->
+        <nav th:if="${orders.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${orders.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/orders(page=${orders.number - 1}, fromDate=${fromDate}, toDate=${toDate})}">«</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, orders.totalPages - 1)}" th:classappend="${i == orders.number} ? 'active'">
+                    <a class="page-link" th:href="@{/user/orders(page=${i}, fromDate=${fromDate}, toDate=${toDate})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${orders.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/orders(page=${orders.number + 1}, fromDate=${fromDate}, toDate=${toDate})}">»</a>
+                </li>
+            </ul>
+        </nav>
+
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,196 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    line-height: 15px;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.search input[type="search"] {
+    border-radius: 5px 5px 5px 5px;
+    border: none;
+    outline: none;
+    margin: 2px;
+    padding: 7px 10px;
+    width: 330px;
+    margin-left: 900px;
+    border: 2px solid rgb(192, 213, 255);
+    
+}
+
+.search button {
+    padding: 7px 10px;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px 5px 5px 5px;
+    background-color: rgb(192, 213, 255);
+    color: black;
+    margin-right: 5px;
+    width: 80px;
+}
+
+.search button:hover{
+    background-color: black;
+    color: white
+}
+
+header {
+    margin: 10px;
+}
+
+nav {
+    min-height: 20px;
+    background-color:rgb(192, 213, 255);
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-nav ul {
+    list-style: none;
+}
+
+.main-nav ul li {
+    float: left;
+    padding: 0 25px;
+    position: relative;
+    color: black;
+}
+
+.main-nav ul li a {
+    display: inline-block;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    line-height: 40px;
+    font-weight: bold;
+}
+
+/*Phần đường ngang*/
+
+hr {
+    border: none;
+    background-color: gray;
+    height: 1px;
+}
+
+
+.menu-doc ul {
+    list-style: none;
+}
+
+.menu-doc ul li {
+    padding: 0 15px;
+    border: 1px solid gray;
+}
+
+
+.menu-doc ul li a {
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    text-decoration: none;
+    line-height: 40px;
+}
+
+
+footer {
+    background-color: rgb(192, 213, 255);
+    color: black;
+    padding: 10px;
+    text-align: center;
+    margin-top: 7%;
+}
+/*MENU CON */
+
+.main-nav ul ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    width: max-content;
+}
+
+.main-nav ul li:hover>ul {
+    display: block;
+}
+
+.main-nav ul ul li {
+    float: none;
+    position: relative;
+}
+
+.main-nav ul ul li a {
+    padding: 5px 10px;
+    color: black;
+    display: block;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.main-nav ul ul :hover {
+    background-color: rgb(192, 213, 255);
+    color: white;
+}
+footer {
+    display: grid;
+    grid-template-columns: auto auto ;
+    flex-grow: 1;
+    padding: 10px;
+}
+.thongtin {
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+
+h4 {
+    color: black;
+    font-weight: bold;
+    text-align: center;
+   
+    
+}
+
+h3 {
+    font-size: 15px;
+    text-align: center;
+    margin-right: 100px;
+}
+
+img{
+    border-radius: 5px;
+    
+}
+
+.social{
+    text-align: center;
+    margin-top: 100px;
+
+}
+
+.sp{
+    text-align: center;
+    margin-top: 100px;
+}
+
+.imgGT{
+    margin-left: 30%;
+}
+
+p{
+    text-align: center;
+}
+

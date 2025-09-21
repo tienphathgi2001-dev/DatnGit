@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Công ty Vật tư Nông nghiệp | Phân bón - Thuốc BVTV - Giống cây
+            trồng</title>
+        <!-- Load Bootstrap -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+        <!-- Load Font Awesome -->
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet">
+
+        <!-- Load CSS tùy chỉnh của bạn -->
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+
+        <style>
+        /* Grid cha */
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            /* responsive */
+            gap: 20px;
+        }
+        /* Mỗi card sản phẩm */
+        
+        .product-card {
+            display: block;
+            /* Cho phép thẻ a bao trọn */
+            text-align: center;
+            border-radius: 15px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        /* Tên, giá, số lượng */
+        
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+        
+        .product-price,
+        .product-quantity {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        
+        .product-price span,
+        .product-quantity span {
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .category-item {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+            height: 240px;
+            /* hoặc tùy chiều cao bạn muốn */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .category-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* ảnh phủ toàn bộ không méo */
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+        
+        .category-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .category-item p {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* nền mờ trắng cho chữ nổi bật */
+            margin: 0;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+        
+        .pagination .page-link {
+            color: #333;
+            border-radius: 8px;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
+            border-color: #bbb;
+            text-decoration: none;
+        }
+        
+        .pagination .active .page-link {
+            background-color: #ff4b2b;
+            border-color: #ff4b2b;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(255, 75, 43, 0.3);
+        }
+        
+        .pagination .disabled .page-link {
+            color: #aaa;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+        
+        #heroCarousel .carousel-item {
+            height: 500px;
+            /* hoặc cao hơn tùy thiết kế */
+        }
+        
+        #heroCarousel .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Giữ tỷ lệ, lấp đầy khung */
+        }
+    </style>
+    </head>
+
+    <body>
+        <!-- Header Top -->
+        <th:block th:include="Common/Header.html"></th:block>
+
+        <div class="container my-5">
+            <!-- Categories -->
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-2"
+                    th:each="cate : ${categories}">
+                    <a th:href="@{/category/{id}(id=${cate.id})}"
+                        class="text-decoration-none">
+                        <div class="category-item">
+                            <!-- <img th:src="@{/img/{img}(img=${cate.image != null ? cate.image : 'default.png'})}" th:alt="${cate.name}"> -->
+                            <p class="mb-0" th:text="${cate.name}"></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Featured Products -->
+            <section class="featured-products">
+                <div class="section-title">
+                    <h2 class="mb-0">
+                        <i class="fas fa-star me-2"></i>SẢN PHẨM
+                    </h2>
+                    <!-- <a href="#" class="d-none d-md-block">Xem tất cả <i
+						class="fas fa-chevron-right ms-1"></i></a> -->
+                </div>
+
+                <!-- Price Filter Form -->
+                <form action="/products" method="get" class="mb-4">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="number" name="minPrice"
+                                class="form-control" placeholder="Giá tối thiểu"
+                                required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" name="maxPrice"
+                                class="form-control" placeholder="Giá tối đa"
+                                required>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit"
+                                class="btn btn-primary w-100">Tìm
+                                kiếm</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Product Grid -->
+                <div class="container mt-4">
+                    <div class="row g-4">
+                        <div class="col-md-3 col-sm-6"
+                            th:each="product : ${products}">
+                            <a th:href="@{/product/{id}(id=${product.id})}"
+                                class="text-decoration-none text-dark">
+                                <div class="card product-card h-100">
+                                    <img
+                                        th:src="@{/img/{image}(image=${product.image != null ? product.image : 'default.png'})}"
+                                        class="rounded" width="50">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title"
+                                            th:text="${product.name}"></h5>
+                                        <p class="card-text text-danger fw-bold"
+                                            th:text="${product.price} + ' VNĐ'"></p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination">
+                            <li class="page-item"
+                                th:classappend="${currentPage == 1} ? 'disabled'">
+                                <a class="page-link"
+                                    th:href="@{/sanpham(pageNo=${currentPage - 1})}">«</a>
+                            </li>
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(1, totalPages)}"
+                                th:classappend="${i == currentPage} ? 'active'">
+                                <a class="page-link"
+                                    th:href="@{/sanpham(pageNo=${i})}"
+                                    th:text="${i}"></a>
+                            </li>
+                            <li class="page-item"
+                                th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                <a class="page-link"
+                                    th:href="@{/sanpham(pageNo=${currentPage + 1})}">»</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <h3>VỀ CHÚNG TÔI</h3>
+                        <p>Công ty Vật tư Nông nghiệp chuyên cung cấp các sản
+                            phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư
+                            nông nghiệp chất lượng cao.
+                        </p>
+                        <div class="social-links d-flex gap-3 mt-3">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a> <a
+                                href="#"><i
+                                    class="fab fa-youtube"></i></a> <a
+                                href="#"><i
+                                    class="fab fa-zalo"></i></a> <a href="#"><i
+                                    class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <h3>DANH MỤC</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#">Trang chủ</a></li>
+                            <li class="mb-2"><a href="#">Phân bón</a></li>
+                            <li class="mb-2"><a href="#">Thuốc BVTV</a></li>
+                            <li class="mb-2"><a href="#">Giống cây
+                                    trồng</a></li>
+                            <li class="mb-2"><a href="#">Vật tư nông
+                                    nghiệp</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <h3>CHÍNH SÁCH</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#">Chính sách bảo
+                                    mật</a></li>
+                            <li class="mb-2"><a href="#">Chính sách vận
+                                    chuyển</a></li>
+                            <li class="mb-2"><a href="#">Chính sách đổi
+                                    trả</a></li>
+                            <li class="mb-2"><a href="#">Điều khoản dịch
+                                    vụ</a></li>
+                            <li class="mb-2"><a href="#">Hướng dẫn mua
+                                    hàng</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <h3>LIÊN HỆ</h3>
+                        <div class="contact-item d-flex mb-3">
+                            <i class="fas fa-map-marker-alt mt-1"></i> <span>123
+                                Đường
+                                Nông Nghiệp, P. Phú Thọ, TP. Thủ Dầu Một, Bình
+                                Dương</span>
+                        </div>
+                        <div class="contact-item d-flex mb-3">
+                            <i class="fas fa-phone-alt mt-1"></i> <span>0901 234
+                                567 -
+                                0909 876 543</span>
+                        </div>
+                        <div class="contact-item d-flex mb-3">
+                            <i class="fas fa-envelope mt-1"></i>
+                            <span>info@nongnghiep.vn</span>
+                        </div>
+                        <div class="contact-item d-flex">
+                            <i class="fas fa-clock mt-1"></i> <span>Thứ 2 - Thứ
+                                7: 7:30
+                                - 17:30</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="copyright pt-4 mt-4 text-center">
+                    <p class="mb-0">&copy; 2023 Công ty Vật tư Nông nghiệp. All
+                        Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+
+</html>

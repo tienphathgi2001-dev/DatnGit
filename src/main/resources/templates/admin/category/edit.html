@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Cập nhật Loại sản phẩm</title>
+
+    <!-- Bootstrap & FontAwesome -->
+    <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css}" rel="stylesheet">
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a th:href="@{/}" class="navbar-brand">
+                <img th:src="@{/img/logo.png}" alt="KICAP" style="width: 120px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/index}"><i class="fas fa-home"></i> Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/category/list}"><i class="fas fa-list"></i> Loại sản phẩm</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/product/list/1}"><i class="fas fa-box"></i> Sản phẩm</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/account/list/1}"><i class="fa-solid fa-circle-user"></i> Người dùng</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/order}"><i class="fas fa-receipt"></i> Hóa đơn</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/thongke}"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="d-flex align-items-center">
+            <div class="dropdown ms-3">
+                <span class="btn btn-secondary dropdown-toggle" id="loggedInUserDropdown" data-bs-toggle="dropdown"
+                      aria-expanded="false" th:text="${session.fullName}"></span>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loggedInUserDropdown">
+                    <li><a class="dropdown-item" th:href="@{/logout}">Đăng Xuất</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Form cập nhật loại sản phẩm -->
+    <div class="container my-5 p-4 bg-white shadow rounded">
+        <div class="container position-relative">
+            <a th:href="@{/admin/category/list}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+
+        <h3 class="mb-4 text-center text-black">
+            <i class="fas fa-edit"></i> Cập Nhật Loại Sản Phẩm
+        </h3>
+
+        <div class="card-body">
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+            <form id="categoryForm" th:object="${category}" th:action="@{/admin/category/update}"
+                  method="post" enctype="multipart/form-data">
+                <input type="hidden" th:field="*{id}">
+
+                <!-- Tên -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên loại:</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                    <span class="error-message text-danger"></span>
+                </div>
+
+                <!-- Số lượng -->
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Số lượng:</label>
+                    <input type="number" class="form-control" id="quantity" th:field="*{quantity}">
+                    <span class="error-message text-danger"></span>
+                </div>
+
+                <!-- Ảnh -->
+                <div class="mb-3 text-center">
+                    <img id="image-preview" th:src="@{'/uploads/' + ${category.image}}"
+                         th:if="${category.image != null}" alt="Ảnh loại sản phẩm"
+                         class="img-thumbnail" style="width: 200px;">
+                    <img id="image-preview" th:src="@{/img/default.png}"
+                         th:if="${category.image == null}" alt="Ảnh mặc định"
+                         class="img-thumbnail" style="width: 200px;">
+
+                    <label for="file" class="form-label d-block mt-2">Ảnh loại sản phẩm:</label>
+                    <input type="file" class="form-control" id="file" name="file"
+                           accept="image/*" onchange="previewImage(event)">
+                    <span class="error-message text-danger"></span>
+                </div>
+
+                <!-- Nút lưu -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- JS validate & preview -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("categoryForm");
+            const nameInput = document.getElementById("name");
+            const quantityInput = document.getElementById("quantity");
+            const fileInput = document.getElementById("file");
+
+            function showError(input, message) {
+                let errorSpan = input.closest('.mb-3').querySelector('.error-message');
+                errorSpan.innerText = message;
+            }
+
+            function clearError(input) {
+                let errorSpan = input.closest('.mb-3').querySelector('.error-message');
+                errorSpan.innerText = "";
+            }
+
+            function validateForm(event) {
+                let isValid = true;
+
+                // Tên loại
+                if (nameInput.value.trim().length === 0) {
+                    showError(nameInput, "Tên loại không được để trống.");
+                    isValid = false;
+                } else if (nameInput.value.trim().length < 3) {
+                    showError(nameInput, "Tên loại phải có ít nhất 3 ký tự.");
+                    isValid = false;
+                } else {
+                    clearError(nameInput);
+                }
+
+                // Số lượng
+                if (quantityInput.value.trim() === "" || parseInt(quantityInput.value) < 0) {
+                    showError(quantityInput, "Số lượng phải là số >= 0.");
+                    isValid = false;
+                } else {
+                    clearError(quantityInput);
+                }
+
+                // Ảnh loại sản phẩm
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+                    const fileExtension = file.name.split('.').pop().toLowerCase();
+                    if (!allowedExtensions.includes(fileExtension)) {
+                        showError(fileInput, "Ảnh phải có định dạng: JPG, JPEG, PNG, GIF.");
+                        isValid = false;
+                    } else {
+                        clearError(fileInput);
+                    }
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            }
+
+            // Preview ảnh
+            window.previewImage = function (event) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    document.getElementById("image-preview").src = reader.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            };
+
+            form.addEventListener("submit", validateForm);
+        });
+    </script>
+</body>
+</html>

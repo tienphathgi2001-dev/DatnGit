@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>VNPay Result - Chi tiết đơn hàng</title>
+    <style>
+        .invoice-container .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+        
+        .invoice-container h3,
+        .invoice-container h2,
+        .invoice-container p {
+            margin-bottom: 10px;
+        }
+        
+        .invoice-container h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .invoice-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .invoice-container table thead tr {
+            background-color: #007bff;
+            color: #fff;
+        }
+        
+        .invoice-container table th,
+        .invoice-container table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .invoice-container table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .invoice-container .total {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 20px;
+            color: #333;
+        }
+        
+        .invoice-container .alert-success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-container .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .invoice-container a.btn-home {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .invoice-container .container {
+                padding: 20px;
+            }
+            .invoice-container table th,
+            .invoice-container table td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+            .invoice-container h2 {
+                font-size: 24px;
+            }
+            .invoice-container .total {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <th:block th:include="Common/Header.html"></th:block>
+
+    <!-- Bọc toàn bộ nội dung invoice trong .invoice-container -->
+    <div class="invoice-container">
+        <div class="container">
+
+            <!-- Thông báo thanh toán -->
+            <div th:if="${message}" th:classappend="${order.paymentStatus} ? 'alert-success' : 'alert-danger'">
+                <span th:text="${message}"></span>
+                <br>
+                <small th:if="${order.paymentStatus}" id="countdown">Sẽ quay về trang chủ sau 5 giây...</small>
+            </div>
+
+            <h3>Chi tiết đơn hàng</h3>
+            <h2>Hóa đơn #[[${order.code}]]</h2>
+            <p>Ngày: [[${order.createdDate}]]</p>
+            <p>Trạng thái: [[${order.status}]]</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Giá</th>
+                        <th>Tổng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="detail : ${orderDetails}">
+                        <td th:text="${detail.product.name}"></td>
+                        <td th:text="${detail.quantity}"></td>
+                        <td th:text="${#numbers.formatDecimal(detail.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                        <td th:text="${#numbers.formatDecimal(detail.price * detail.quantity, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="total">
+                Tổng cộng: [[${#numbers.formatDecimal(order.total, 0, 'COMMA', 0, 'POINT')}]] đ
+            </div>
+
+            <!-- Nút quay về -->
+            <div style="margin-top: 20px;">
+                <a href="/" class="btn-home">Quay về trang chủ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script đếm ngược -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let seconds = 5;
+            const countdownEl = document.getElementById("countdown");
+
+            if (countdownEl) {
+                const timer = setInterval(function() {
+                    seconds--;
+                    countdownEl.textContent = `Sẽ quay về trang chủ sau ${seconds} giây...`;
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        window.location.href = "/";
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>

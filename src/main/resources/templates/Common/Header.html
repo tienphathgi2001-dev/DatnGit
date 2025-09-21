@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công ty Vật tư Nông nghiệp | Phân bón - Thuốc BVTV - Giống cây trồng</title>
+    <!-- Load Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Load Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Load CSS tùy chỉnh của bạn -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <!-- Header thông báo -->
+    <div class="bg-light py-1 text-center">
+        <marquee class="fw-bold text-success">Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+        </marquee>
+    </div>
+
+    <!-- Header Top -->
+    <div class="header-top bg-light py-2 border-bottom">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Thông tin liên hệ -->
+                <div class="contact-info d-flex gap-3 text-secondary small">
+                    <span><i class="fas fa-phone-alt me-1"></i> 0901 234 567</span>
+                    <span><i class="fas fa-envelope me-1"></i> info@nongnghiep.vn</span>
+                </div>
+
+                <!-- Tài khoản -->
+                <div class="user-actions d-flex align-items-center gap-3">
+                    <!-- Nếu chưa đăng nhập -->
+                    <th:block th:if="${session.fullName == null}">
+                        <a class="text-decoration-none text-dark" th:href="@{/dangnhap}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+                        </a>
+                        <a class="text-decoration-none text-dark" th:href="@{/dangky}">
+                            <i class="fas fa-user-plus me-1"></i> Đăng ký
+                        </a>
+                    </th:block>
+
+                    <!-- Nếu đã đăng nhập -->
+                    <th:block th:if="${session.fullName != null}">
+                        <span class="text-dark">
+                        <i class="fas fa-user me-1"></i> Xin chào, <strong th:text="${session.fullName}">Người dùng</strong>
+                    </span>
+                        <a class="text-decoration-none text-dark" th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+                        </a>
+
+                        <!-- Chỉ hiện nếu là admin -->
+                        <a class="text-decoration-none text-dark" th:if="${session.admin}" th:href="@{/admin/index}">
+                            <i class="fas fa-user-shield me-1"></i> Quản trị
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <div class="logo d-flex align-items-center mb-3 mb-md-0">
+                    <img th:src="@{/img/logo1.jpg}" alt="Công ty Vật tư Nông nghiệp">
+                    <div class="logo-text ms-3">
+                        <h1 class="mb-0">CÔNG TY VẬT TƯ NÔNG NGHIỆP</h1>
+                        <p class="mb-0">Phân bón - Thuốc BVTV - Giống cây trồng</p>
+                    </div>
+                </div>
+
+                <div class="search-box flex-grow-1 mx-0 mx-md-3 my-3 my-md-0">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                        <button class="btn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+
+                <a th:href="@{/cart/view}">
+                    <div class="cart-icon position-relative">
+                        <i class="fas fa-shopping-cart fs-4"></i>
+                        <span class="cart-count badge rounded-pill" th:text="${session.cartCount != null ? session.cartCount : 0}">0</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg main-nav">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sanpham}">
+                            <i class="fas fa-star"></i>Sản phẩm
+                        </a>
+                    </li>
+
+
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" th:href="@{/chat}">
+                            <i class="fas fa-comments me-1"></i> Chat
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/news}">
+                            <i class="fas fa-book me-1"></i>Tin tức
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/lienhe}">
+                            <i class="fas fa-address-book me-1"></i>Liên hệ
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name} + ' | Công ty Vật tư Nông nghiệp'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+         :root {
+            --primary-color: #28a745;
+            --secondary-color: #218838;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .product-detail-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+            margin-bottom: 50px;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .thumbnail:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+        
+        .product-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .product-brand {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .product-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--danger-color);
+            margin-bottom: 20px;
+        }
+        
+        .in-stock {
+            color: var(--primary-color);
+        }
+        
+        .out-of-stock {
+            color: var(--danger-color);
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .quantity-input {
+            width: 60px;
+            height: 35px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-left: none;
+            border-right: none;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .btn-add-to-cart,
+        .btn-buy-now {
+            border: none;
+            padding: 10px 25px;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .btn-add-to-cart {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-add-to-cart:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-buy-now {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-buy-now:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+        
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        
+        .rating input {
+            display: none;
+        }
+        
+        .rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .rating input:checked~label,
+        .rating label:hover,
+        .rating label:hover~label {
+            color: gold;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:insert="~{Common/Header.html}"></div>
+
+
+
+
+
+
+    <div class="container">
+        <div class="product-detail-container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-gallery">
+                        <img th:if="${product.image != null}" th:src="@{'/img/' + ${product.image}}" class="main-image" th:alt="${product.name}" />
+                        <div class="thumbnail-container">
+                            <img th:if="${product.image != null}" th:src="@{'/img/' + ${product.image}}" class="thumbnail" th:alt="${product.name}" /> <img th:src="@{/img/product-detail-2.jpg}" class="thumbnail" alt="Thumbnail 2" /> <img th:src="@{/img/product-detail-3.jpg}"
+                                class="thumbnail" alt="Thumbnail 3" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="product-info">
+                        <h1 class="product-title" th:text="${product.name}"></h1>
+                        <div class="product-brand" th:text="${product.category != null ? product.category.name : 'Không rõ danh mục'}"></div>
+                        <div class="product-price" th:text="${'Giá: ' + #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></div>
+                        <div class="product-meta">
+                            <p>
+                                <strong>Thương hiệu:</strong> Công ty Vật tư Nông nghiệp
+                            </p>
+                            <p>
+                                <strong>Tình trạng:</strong>
+                                <span th:class="${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}" th:text="${product.quantity > 0 ? 'Còn hàng (' + product.quantity + ' ' + product.unit.name + ')' : 'Hết hàng'}">
+                                  </span>
+                            </p>
+
+                            <p>
+                                <strong>Mã sản phẩm:</strong> <span th:text="${product.id}"></span>
+                            </p>
+                        </div>
+
+                        <div class="product-description mt-4">
+                            <h4>Mô tả sản phẩm</h4>
+                            <p th:text="${product.description != null ? product.description : 'Chưa có mô tả cho sản phẩm này.'}"></p>
+                        </div>
+
+                        <div class="quantity-control">
+                            <div class="quantity-btn minus">-</div>
+                            <input type="text" class="quantity-input" value="1">
+                            <div class="quantity-btn plus">+</div>
+                        </div>
+                        <form th:action="@{/cart/add}" method="get">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+                            <input type="hidden" name="quantity" value="1">
+                            <div class="action-buttons">
+                                <button type="submit" class="btn-add-to-cart">Thêm vào
+									giỏ</button>
+                                <a th:href="@{/cart/checkout}" class="btn-buy-now">Mua ngay</a>
+                            </div>
+                        </form>
+
+
+
+
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- ==================== Phần đánh giá sản phẩm ==================== -->
+
+
+        <!-- Form đánh giá -->
+        <!-- Form gửi đánh giá -->
+        <div class="review-form mt-4">
+            <h4>Đánh giá sản phẩm</h4>
+            <form th:action="@{'/product/' + ${product.id} + '/review'}" method="post" th:object="${newReview}">
+                <div class="mb-3">
+                    <label for="rating">Chọn số sao:</label>
+                    <div class="rating">
+                        <input type="radio" id="star5" name="rating" th:field="*{rating}" value="5">
+                        <label for="star5"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star4" name="rating" th:field="*{rating}" value="4">
+                        <label for="star4"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star3" name="rating" th:field="*{rating}" value="3">
+                        <label for="star3"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star2" name="rating" th:field="*{rating}" value="2">
+                        <label for="star2"><i class="fas fa-star"></i></label>
+                        <input type="radio" id="star1" name="rating" th:field="*{rating}" value="1">
+                        <label for="star1"><i class="fas fa-star"></i></label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="comment">Bình luận:</label>
+                    <textarea id="comment" th:field="*{comment}" rows="3" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+            </form>
+        </div>
+
+
+        <!-- Danh sách đánh giá -->
+        <div class="reviews mt-4" id="reviews">
+            <h4>Danh sách đánh giá</h4>
+            <div th:if="${reviews == null or #lists.isEmpty(reviews)}">
+                <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+            </div>
+            <div th:each="rv : ${reviews}" class="border p-2 mb-2 rounded">
+                <p>
+                    <b th:text="${rv.account != null ? rv.account.fullName : 'Ẩn danh'}"></b>
+                    <span>-</span>
+                    <span th:text="${rv.rating}"></span>/5 ⭐
+                </p>
+                <p th:text="${rv.comment}">Nội dung bình luận</p>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <h3>VỀ CHÚNG TÔI</h3>
+                    <p>Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+                    </p>
+                    <div class="social-links d-flex gap-3 mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+							class="fab fa-youtube"></i></a> <a href="#"><i
+							class="fab fa-zalo"></i></a> <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>DANH MỤC</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Trang chủ</a></li>
+                        <li class="mb-2"><a href="#">Phân bón</a></li>
+                        <li class="mb-2"><a href="#">Thuốc BVTV</a></li>
+                        <li class="mb-2"><a href="#">Giống cây trồng</a></li>
+                        <li class="mb-2"><a href="#">Vật tư nông nghiệp</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>CHÍNH SÁCH</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Chính sách bảo mật</a></li>
+                        <li class="mb-2"><a href="#">Chính sách vận chuyển</a></li>
+                        <li class="mb-2"><a href="#">Chính sách đổi trả</a></li>
+                        <li class="mb-2"><a href="#">Điều khoản dịch vụ</a></li>
+                        <li class="mb-2"><a href="#">Hướng dẫn mua hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>LIÊN HỆ</h3>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-map-marker-alt mt-1"></i> <span>123 Đường
+							Nông Nghiệp, P. Phú Thọ, TP. Thủ Dầu Một, Bình Dương</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-phone-alt mt-1"></i> <span>0901 234 567 -
+							0909 876 543</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-envelope mt-1"></i> <span>info@nongnghiep.vn</span>
+                    </div>
+                    <div class="contact-item d-flex">
+                        <i class="fas fa-clock mt-1"></i> <span>Thứ 2 - Thứ 7: 7:30
+							- 17:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright pt-4 mt-4 text-center">
+                <p class="mb-0">&copy; 2023 Công ty Vật tư Nông nghiệp. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        document.querySelectorAll('.thumbnail').forEach(img => {
+            img.addEventListener('click', () => {
+                document.querySelector('.main-image').src = img.src;
+            });
+        });
+    </script>
+
+
+
+
+</body>
+
+</html>

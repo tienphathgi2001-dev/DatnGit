@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+body {
+    background-color: #f8f9fa;
+}
+.navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.table th {
+    background: #51585e;
+    color: white;
+}
+.custom-btn {
+    border-color: black;
+    color: black;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.custom-btn i {
+    color: black;
+    transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+    background-color: black;
+    color: white;
+}
+
+.custom-btn:hover i {
+    color: white;
+}
+.pagination .page-link {
+    background-color: black;
+    color: white;
+    border: 1px solid black;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: white;
+    color: black;
+}
+
+.pagination .active .page-link {
+    background-color: white !important;
+    color: black !important;
+    border-color: black !important;
+}
+
+.pagination .disabled .page-link {
+    background-color: #6c757d; /* Màu xám nhạt */
+    color: white;
+    border-color: #6c757d;
+    pointer-events: none; /* Vô hiệu hóa click */
+}

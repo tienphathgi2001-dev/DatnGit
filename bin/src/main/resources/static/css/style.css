@@ -1,0 +1,251 @@
+.image-container {
+    overflow: hidden;
+    border-radius: 0.5rem;
+}
+
+.card-img-top {
+    transition: transform 0.3s ease;
+    /* Hiệu ứng mượt khi phóng to */
+}
+
+.image-container:hover .card-img-top {
+    transform: scale(1.1);
+    /* Phóng to hình ảnh */
+}
+
+/* Thiết kế card */
+.card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.btn-custom {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 1;
+
+}
+
+/* Center the Button */
+.btn-custom {
+    position: relative;
+    display: inline-block;
+    padding: 12px 40px;
+    /* Increase padding for a wider button */
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: transparent;
+    border: 2px solid #1c1c1c;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    transition: color 0.45s ease;
+    z-index: 1;
+    min-width: 180px;
+    /* Set a minimum width to ensure the button is long */
+    text-align: center;
+    /* Center the text */
+}
+
+/* Add a background effect */
+.btn-custom::before {
+    position: absolute;
+    content: '';
+    display: block;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1, 1);
+    transform-origin: left center;
+    background-color: #1c1c1c;
+    z-index: -1;
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+.btn-custom::after {
+    position: absolute;
+    content: '';
+    display: block;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1, 1);
+    transform-origin: right center;
+    background-color: #1c1c1c;
+    z-index: -1;
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+/* Hover effect for the text and background */
+.btn-custom:hover {
+    color: #000;
+    outline: auto
+        /* Change text color to black */
+}
+
+.btn-custom:hover::before {
+    transform: scale(0, 1);
+    /* Shrink background effect */
+}
+
+.btn-custom:hover::after {
+    transform: scale(0, 1);
+    /* Shrink background effect */
+}
+
+/* Styles for the welcome section */
+.welcome-section {
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    /* Light background for the section */
+    border: 1px solid #e0e0e0;
+    /* Optional border */
+    border-radius: 8px;
+    max-width: 900px;
+    margin: 0 auto;
+    /* Center the section */
+}
+
+.welcome-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.welcome-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.welcome-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    /* Rounded corners for the image */
+}
+
+.welcome-text {
+    max-width: 450px;
+    text-align: left;
+}
+
+.welcome-text h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.welcome-text p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    /* Text color */
+}
+
+.marquee {
+    font-size: 300px;
+    color: #6BAF92;
+    /* Màu xanh nhạt giống ảnh */
+    font-weight: bold;
+    white-space: nowrap;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+/* Hiệu ứng chuyển đổi mượt cho tiêu đề */
+.fade {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Loại bỏ viền nút và giữ màu nền trắng */
+.btn-light {
+    border: none;
+    background-color: black;
+    color: rgb(255, 255, 255);
+}
+
+/* Khoảng cách giữa nút và tiêu đề */
+.mx-3 {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.carousel-caption {
+    right: 5%;
+    bottom: 10%;
+    text-align: right; /* Align text to the right */
+}
+
+.carousel-caption h3 {
+    font-size: 2rem; /* Adjust font size as needed */
+    animation: fadeIn 1.5s ease-in-out; /* Add smooth fade-in animation */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.video-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+.video-item {
+    width: 23%; /* Chiều rộng của mỗi video chiếm khoảng 1/4 */
+    height: 170px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.video-item iframe {
+    width: 100%;
+    height: 100%;
+}
+
+/* Giới hạn kích thước hình ảnh */
+.table img {
+    width: 80px; /* Chiều rộng cố định cho hình ảnh */
+    height: auto; /* Giữ tỷ lệ hình ảnh */
+    object-fit: cover; /* Cắt ảnh sao cho vừa với kích thước mà không bị biến dạng */
+    border-radius: 5px; /* Thêm bo góc cho ảnh để trông mềm mại hơn */
+}

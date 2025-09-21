@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tin tức nông nghiệp</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+        <style>
+        /* Tin tức grid */
+        
+        .news-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            /* 2 cột */
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .news-list {
+                grid-template-columns: 1fr;
+                /* mobile 1 cột */
+            }
+        }
+        
+        .news-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .news-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 3px solid #ff4b2b;
+        }
+        
+        .news-content {
+            padding: 15px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+        
+        .news-title:hover {
+            color: #ff4b2b;
+        }
+        
+        .news-meta {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 12px;
+        }
+        
+        .news-desc {
+            font-size: 1rem;
+            color: #555;
+            flex-grow: 1;
+        }
+        
+        .read-more {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #ff4b2b;
+            text-decoration: none;
+            align-self: flex-start;
+        }
+        
+        .read-more:hover {
+            color: #d9361a;
+            text-decoration: underline;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+        
+        .pagination .page-link {
+            color: #333;
+            border-radius: 8px;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
+            border-color: #bbb;
+            text-decoration: none;
+        }
+        
+        .pagination .active .page-link {
+            background-color: #ff4b2b;
+            border-color: #ff4b2b;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .pagination .disabled .page-link {
+            color: #aaa;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+    </style>
+    </head>
+
+    <body>
+
+        <th:block th:include="Common/Header.html"></th:block>
+        <div class="container mt-4">
+            <h2 class="mb-4 text-center">📰 Tin tức nông nghiệp</h2>
+
+            <!-- Grid tin tức -->
+            <div class="news-list">
+                <a th:each="n : ${newsPage.content}"
+                    th:href="@{'/news/' + ${n.id}}" class="news-card">
+                    <img th:src="@{${n.image}}" alt="Ảnh tin tức">
+                    <div class="news-content">
+                        <h5 class="news-title" th:text="${n.title}"></h5>
+                        <div class="news-meta">
+                            <i class="far fa-clock"></i>
+                            <span
+                                th:text="${#temporals.format(n.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                        </div>
+                        <p class="news-desc"
+                            th:text="${#strings.abbreviate(n.content,150)}"></p>
+                        <span class="read-more">Xem chi tiết →</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4">
+                <ul class="pagination">
+                    <!-- Nút Trước -->
+                    <li class="page-item"
+                        th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a class="page-link"
+                            th:href="@{/news(page=${currentPage - 1}, q=${q})}">«
+                            Trước</a>
+                    </li>
+
+                    <!-- Các số trang -->
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(1, totalPages)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                            th:href="@{/news(page=${i}, q=${q})}"
+                            th:text="${i}"></a>
+                    </li>
+
+                    <!-- Nút Sau -->
+                    <li class="page-item"
+                        th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a class="page-link"
+                            th:href="@{/news(page=${currentPage + 1}, q=${q})}">Sau
+                            »</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+
+</html>

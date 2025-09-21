@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Chi tiết đơn hàng</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #198754;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #198754;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 8px;
+        }
+        
+        img.product-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        img.product-img:hover {
+            transform: scale(1.1);
+        }
+        
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+            text-align: right;
+            margin-top: 15px;
+        }
+        
+        .back-btn {
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .back-btn:hover {
+            background-color: #157347;
+            transform: translateY(-2px);
+        }
+        /* Responsive cho mobile */
+        
+        @media(max-width:768px) {
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+            thead tr {
+                display: none;
+            }
+            td {
+                text-align: left;
+                padding: 10px 0;
+                border-bottom: 1px solid #ddd;
+            }
+            td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+                color: #198754;
+            }
+            img.product-img {
+                width: 100%;
+                height: auto;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div claa>
+        <th:block th:include="Common/Header.html"></th:block>
+
+    </div>
+    <!-- Import header -->
+
+
+    <div class="container">
+        <h2>Chi tiết đơn hàng: <span th:text="${order.code}"></span></h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Hình</th>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${order.orderDetails}">
+                    <td data-label="Hình">
+                        <img th:src="@{'/images/' + ${item.product.image}}" alt="Hình sản phẩm" class="product-img">
+                    </td>
+                    <td data-label="Sản phẩm" th:text="${item.product.name}"></td>
+                    <td data-label="Giá" th:text="${#numbers.formatDecimal(item.product.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></td>
+                    <td data-label="Số lượng" th:text="${item.quantity}"></td>
+                    <td data-label="Thành tiền" th:text="${#numbers.formatDecimal(item.quantity * item.product.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="total">Tổng đơn hàng: <span th:text="${#numbers.formatDecimal(order.total, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span></p>
+
+        <a th:href="@{/user/orders}" class="btn btn-primary back-btn">« Quay lại lịch sử đơn hàng</a>
+    </div>
+</body>
+
+</html>

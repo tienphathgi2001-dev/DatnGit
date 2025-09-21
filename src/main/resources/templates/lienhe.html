@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}">
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{https://www.w3schools.com/w3css/4/w3.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>KICAP</title>
+</head>
+
+<body>
+    <th:block th:include="Common/Header.html"></th:block>
+
+
+    <div class="sp text-center my-4">
+        <h2><strong>GỬI THÔNG TIN</strong></h2>
+        <h5>Điền thông tin vào form dưới đây, chúng tôi sẽ phản hồi sớm nhất.</h5>
+    </div>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-center">Gửi Email</h2>
+                <!-- Hiển thị thông báo thành công hoặc lỗi -->
+                <div th:if="${message}" class="alert alert-success" role="alert">
+                    <span th:text="${message}"></span>
+                </div>
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+
+                <form id="emailForm" th:action="@{/send}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Email của bạn</label>
+                        <input type="email" class="form-control" id="from" name="from" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Chủ đề</label>
+                        <input type="text" class="form-control" id="subject" name="subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nội dung</label>
+                        <textarea class="form-control" id="body" name="body" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <iframe src="https://www.google.com/maps/embed?..." width="100%" height="425" style="border: 0;" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <h3>VỀ CHÚNG TÔI</h3>
+                    <p>Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+                    </p>
+                    <div class="social-links d-flex gap-3 mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+							class="fab fa-youtube"></i></a> <a href="#"><i
+							class="fab fa-zalo"></i></a> <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>DANH MỤC</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Trang chủ</a></li>
+                        <li class="mb-2"><a href="#">Phân bón</a></li>
+                        <li class="mb-2"><a href="#">Thuốc BVTV</a></li>
+                        <li class="mb-2"><a href="#">Giống cây trồng</a></li>
+                        <li class="mb-2"><a href="#">Vật tư nông nghiệp</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>CHÍNH SÁCH</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Chính sách bảo mật</a></li>
+                        <li class="mb-2"><a href="#">Chính sách vận chuyển</a></li>
+                        <li class="mb-2"><a href="#">Chính sách đổi trả</a></li>
+                        <li class="mb-2"><a href="#">Điều khoản dịch vụ</a></li>
+                        <li class="mb-2"><a href="#">Hướng dẫn mua hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>LIÊN HỆ</h3>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-map-marker-alt mt-1"></i> <span>123 Đường
+							Nông Nghiệp, P. Phú Thọ, TP. Thủ Dầu Một, Bình Dương</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-phone-alt mt-1"></i> <span>0901 234 567 -
+							0909 876 543</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-envelope mt-1"></i> <span>info@nongnghiep.vn</span>
+                    </div>
+                    <div class="contact-item d-flex">
+                        <i class="fas fa-clock mt-1"></i> <span>Thứ 2 - Thứ 7: 7:30
+							- 17:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright pt-4 mt-4 text-center">
+                <p class="mb-0">&copy; 2023 Công ty Vật tư Nông nghiệp. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

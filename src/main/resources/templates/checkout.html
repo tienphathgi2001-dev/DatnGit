@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán - KICAP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/cart.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container py-5">
+    <h2 class="text-center mb-4">Thanh Toán</h2>
+
+    <!-- Giỏ hàng -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover cart-table">
+            <thead class="table-dark">
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Tổng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cartDetail : ${cartDetails}">
+                <td th:text="${cartDetail.product.name}"></td>
+                <td th:text="${cartDetail.quantity}"></td>
+                <td th:text="${#numbers.formatDecimal(cartDetail.product.price,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
+                <td th:text="${#numbers.formatDecimal(cartDetail.product.price * cartDetail.quantity,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tổng tiền -->
+    <div class="text-end mt-3">
+        <h5>Tổng tiền hàng: <span id="totalText"
+                                   th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' VNĐ'"></span></h5>
+        <p>Phí vận chuyển: <span id="shippingFeeText"
+                                 th:text="${shippingFee + ' VNĐ'}"></span></p>
+        <p>Giảm giá: <span id="discountAmountText">0 VNĐ</span></p>
+        <h4>Tổng cộng: <span id="grandTotalText"
+                             th:text="${grandTotal + ' VNĐ'}"></span></h4>
+    </div>
+
+    <!-- Form thanh toán -->
+    <form id="checkoutForm" th:action="@{/checkout/pay}" method="get" class="mt-4">
+        <div th:each="id : ${selectedIds}">
+            <input type="hidden" name="selectedIds" th:value="${id}"/>
+        </div>
+        <input type="hidden" id="amountInput" name="amount" th:value="${grandTotal}"/>
+        <input type="hidden" id="addressHidden" name="address"/>
+
+        <!-- Địa chỉ giao hàng -->
+        <div class="mb-3">
+            <select id="addressSelect" name="shippingAddress" class="form-select mb-2">
+                <option value="">-- Chọn địa chỉ đã lưu --</option>
+                <option th:each="addr : ${addresses}"
+                        th:value="${addr.ward.ma}"
+                        th:data-districtcode="${addr.ward.district.code}"
+                        th:data-fulladdress="${addr.houseNumber + ', ' + addr.ward.ten + ', ' + addr.ward.district.name + ', ' + addr.ward.district.province.name}"
+                        th:text="${addr.houseNumber + ', ' + addr.ward.ten + ', ' + addr.ward.district.name + ', ' + addr.ward.district.province.name}"
+                        th:selected="${addr.isDefault}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Nhập mã khuyến mãi -->
+        <div class="mb-3">
+            <label for="discountCodeInput" class="form-label">Mã khuyến mãi</label>
+            <div class="input-group">
+                <input type="text" id="discountCodeInput" class="form-control" placeholder="Nhập mã giảm giá">
+                <button type="button" id="applyDiscountBtn" class="btn btn-outline-primary">Áp dụng</button>
+            </div>
+            <p id="discountMessage" class="mt-2"></p>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/cart/view}" class="btn btn-outline-primary"><i class="fas fa-arrow-left"></i> Quay lại giỏ
+                hàng</a>
+            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Xác nhận thanh toán</button>
+        </div>
+    </form>
+</div>
+
+<footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container">
+        <img th:src="@{/img/logo.png}" alt="Logo" class="mb-3" style="max-width: 90px;">
+        <p>HỘ KINH DOANH KICAP<br>Chứng nhận ĐKKD số: 01A8035150<br>Địa chỉ: 38, ngõ 575 Kim Mã, Ba Đình, Hà Nội<br>0369161095 - kicap.vn@gmail.com</p>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script tính toán -->
+<script th:inline="javascript">
+    const total = /*[[${total}]]*/ 0;
+    const grandTotalText = document.getElementById('grandTotalText');
+    const amountInput = document.getElementById('amountInput');
+    const shippingFeeText = document.getElementById('shippingFeeText');
+    const discountAmountText = document.getElementById('discountAmountText');
+    const discountCodeInput = document.getElementById('discountCodeInput');
+    const applyDiscountBtn = document.getElementById('applyDiscountBtn');
+    const discountMessage = document.getElementById('discountMessage');
+    const addressHidden = document.getElementById('addressHidden');
+    const addressSelect = document.getElementById('addressSelect');
+
+    let shippingFee = /*[[${shippingFee}]]*/ 0;
+    let discountValue = 0;
+
+    function formatVND(amount) {
+        return amount.toLocaleString('vi-VN') + ' VNĐ';
+    }
+
+    function updateGrandTotal() {
+        let grandTotal = total + shippingFee - discountValue;
+        if (grandTotal < 0) grandTotal = 0;
+        grandTotalText.innerText = formatVND(grandTotal);
+        amountInput.value = grandTotal;
+    }
+
+    // Áp dụng mã giảm giá
+    applyDiscountBtn.addEventListener('click', function () {
+        const code = discountCodeInput.value.trim();
+        if (!code) {
+            discountMessage.innerText = "Vui lòng nhập mã giảm giá!";
+            discountMessage.classList.add("text-danger");
+            return;
+        }
+
+        const orderTotal = total + shippingFee;
+        fetch(`/api/discount/apply?code=${code}&orderTotal=${orderTotal}`, {method: 'POST'})
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    discountValue = data.discount;
+                    discountAmountText.innerText = formatVND(discountValue);
+                    discountMessage.innerText = data.message;
+                    discountMessage.classList.remove("text-danger");
+                    discountMessage.classList.add("text-success");
+                } else {
+                    discountValue = 0;
+                    discountAmountText.innerText = "0 VNĐ";
+                    discountMessage.innerText = data.message;
+                    discountMessage.classList.remove("text-success");
+                    discountMessage.classList.add("text-danger");
+                }
+                updateGrandTotal();
+            })
+            .catch(err => {
+                console.error(err);
+                discountMessage.innerText = "Không thể kết nối máy chủ!";
+                discountMessage.classList.remove("text-success");
+                discountMessage.classList.add("text-danger");
+            });
+    });
+
+    // Khi user chọn địa chỉ
+    addressSelect.addEventListener('change', function () {
+        const wardCode = this.value;
+        const districtCode = this.options[this.selectedIndex].getAttribute('data-districtcode');
+        const fullAddress = this.options[this.selectedIndex].getAttribute('data-fulladdress') || '';
+
+        if (!wardCode || !districtCode) {
+            shippingFee = 0;
+            shippingFeeText.innerText = '0 VNĐ';
+            updateGrandTotal();
+            addressHidden.value = '';
+            return;
+        }
+
+        fetch(`/shipping/fee?wardCode=${wardCode}&districtCode=${districtCode}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.fee != null) {
+                    shippingFee = data.fee;
+                    shippingFeeText.innerText = formatVND(shippingFee);
+                    addressHidden.value = fullAddress;
+                    updateGrandTotal();
+                } else {
+                    shippingFee = 0;
+                    shippingFeeText.innerText = '0 VNĐ';
+                    updateGrandTotal();
+                    alert('Không tính được phí vận chuyển: ' + (data.error || 'Lỗi không xác định'));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Không thể kết nối API phí vận chuyển.');
+            });
+    });
+
+    // Load mặc định khi vào trang
+    window.addEventListener('load', function () {
+        const selectedOption = addressSelect.options[addressSelect.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            const wardCode = selectedOption.value;
+            const districtCode = selectedOption.getAttribute('data-districtcode');
+            const fullAddress = selectedOption.getAttribute('data-fulladdress');
+            if (wardCode && districtCode) {
+                fetch(`/shipping/fee?wardCode=${wardCode}&districtCode=${districtCode}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.fee != null) {
+                            shippingFee = data.fee;
+                            shippingFeeText.innerText = formatVND(shippingFee);
+                            addressHidden.value = fullAddress;
+                        }
+                        updateGrandTotal();
+                    });
+            } else {
+                updateGrandTotal();
+            }
+        } else {
+            updateGrandTotal();
+        }
+    });
+</script>
+</body>
+</html>

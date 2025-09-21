@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link
+			th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css}"
+			rel="stylesheet">
+		<link
+			th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}"
+			rel="stylesheet">
+		<title>Admin Dashboard</title>
+		<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f8f9fa;
+	margin: 0;
+	display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+	width: 250px;
+	background: linear-gradient(180deg, #198754 0%, #157347 100%);
+	color: #fff;
+	height: 100vh;
+	position: fixed;
+	padding-top: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.sidebar .navbar-brand img {
+	max-height: 55px;
+	margin-bottom: 20px;
+	border-radius: 10px;
+}
+
+.sidebar .nav-link {
+	font-weight: 500;
+	color: #e9ecef;
+	padding: 12px 18px;
+	display: flex;
+	align-items: center;
+	border-radius: 8px;
+	margin: 4px 8px;
+	transition: 0.25s;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+	background-color: #fff;
+	color: #198754;
+	font-weight: 600;
+}
+
+.sidebar .nav-link i {
+	margin-right: 10px;
+	font-size: 1.1rem;
+}
+
+/* Content area */
+.content {
+	margin-left: 250px;
+	padding: 20px;
+	flex: 1;
+}
+
+.topbar {
+	background-color: #fff;
+	padding: 12px 20px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+/* User dropdown */
+.dropdown .btn-secondary {
+	background-color: #198754;
+	border: none;
+	font-weight: 500;
+	padding: 6px 14px;
+	border-radius: 8px;
+}
+
+.dropdown .btn-secondary:hover {
+	background-color: #145c32;
+}
+/* Logo */
+.logo-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 25px;
+	padding: 15px;
+}
+
+.logo-img {
+	width: 120px; /* kích thước logo */
+	height: auto; /* giữ tỉ lệ ảnh */
+	border-radius: 12px; /* bo góc nhẹ, vuông hiện đại */
+	object-fit: cover;
+	transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+	transform: scale(1.1);
+}
+</style>
+	</head>
+
+	<body>
+
+		<!-- Sidebar -->
+		<div class="sidebar">
+			<a th:href="@{/}"
+				class="navbar-brand text-center d-block logo-container"> <img
+					th:src="@{/img/logo.png}" alt="F6Shop" class="logo-img">
+			</a>
+			<ul class="nav flex-column mt-3">
+				<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/index}"><i class="fas fa-home"></i> Trang chủ</a></li>
+				<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/category/list}"><i class="fas fa-list"></i>
+						Loại sản phẩm</a></li>
+				<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/product/list/1}"><i class="fas fa-box"></i>
+						Sản phẩm</a></li>
+				<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/account/list/1}"><i
+							class="fa-solid fa-circle-user"></i> Người dùng</a></li>
+				<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/order}"><i class="fas fa-file-invoice-dollar"></i>
+						Hóa đơn</a></li>
+				<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/news}"><i class="fas fa-newspaper"></i> Tin
+						tức</a></li>
+				<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/discounts}"><i class="fas fa-newspaper"></i> Khuyến Mãi</a></li>
+				<li class="nav-item"><a class="nav-link"
+						data-bs-toggle="collapse" href="#collapseThongKe" role="button"
+						aria-expanded="false" aria-controls="collapseThongKe"> <i
+							class="fas fa-chart-line"></i> Thống kê
+					</a>
+					<div class="collapse" id="collapseThongKe">
+						<ul class="nav flex-column ms-3">
+							<li class="nav-item"><a class="nav-link"
+									th:href="@{/admin/doanhthu}"> <i class="fas fa-coins"></i>
+									Doanh thu
+								</a></li>
+							<li class="nav-item"><a class="nav-link"
+									th:href="@{/admin/donhang}"> <i class="fas fa-shopping-cart"></i>
+									Đơn hàng
+								</a></li>
+							<li class="nav-item"><a class="nav-link"
+									th:href="@{/admin/sanpham}"> <i class="fas fa-boxes"></i> Sản
+									phẩm
+								</a></li>
+						</ul>
+					</div></li>
+
+			</ul>
+
+			<div class="mt-auto p-3">
+				<div class="dropdown text-center">
+					<span class="btn btn-secondary dropdown-toggle w-100"
+						id="loggedInUserDropdown" data-bs-toggle="dropdown"
+						aria-expanded="false" th:text="${session.fullName}"></span>
+					<ul class="dropdown-menu" aria-labelledby="loggedInUserDropdown">
+						<li><a class="dropdown-item" th:href="@{/logout}">Đăng
+								Xuất</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Main Content -->
+		<div class="content">
+			<!-- Top bar -->
+			<div class="topbar">
+				<h5 class="mb-0 text-success">📊 Dashboard</h5>
+			</div>
+			<!-- Dashboard Cards -->
+			<div class="row g-4 mt-3">
+				<!-- Card 1: Tổng Sản Phẩm -->
+				<div class="col-md-3">
+					<div class="card text-white bg-success h-100 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">Tổng Sản Phẩm</h5>
+							<p class="card-text fs-3 fw-bold" th:text="${totalProducts}">120</p>
+						</div>
+						<div class="card-footer bg-transparent border-0">
+							<small>Đã cập nhật hôm nay</small>
+						</div>
+					</div>
+				</div>
+
+				<!-- Card 2: Tổng Đơn Hàng -->
+				<div class="col-md-3">
+					<div class="card text-white bg-primary h-100 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">Tổng Đơn Hàng</h5>
+							<p class="card-text fs-3 fw-bold" th:text="${totalOrders}">45</p>
+						</div>
+						<div class="card-footer bg-transparent border-0">
+							<small>Đã cập nhật hôm nay</small>
+						</div>
+					</div>
+				</div>
+
+				<!-- Card 3: Doanh Thu -->
+				<div class="col-md-3">
+					<div class="card text-white bg-warning h-100 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">Doanh Thu</h5>
+							<p class="card-text fs-3 fw-bold"
+								th:text="${#numbers.formatDecimal(totalRevenue,0,'COMMA',0,'POINT')}">0</p>
+						</div>
+						<div class="card-footer bg-transparent border-0">
+							<small>Đã cập nhật hôm nay</small>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<div class="card text-white bg-danger h-100 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">Tin Tức</h5>
+							<p class="card-text fs-3 fw-bold" th:text="${totalNews}">0</p>
+						</div>
+						<div class="card-footer bg-transparent border-0">
+							<small>Đã cập nhật hôm nay</small>
+						</div>
+					</div>
+				</div>
+
+				<!-- Biểu đồ doanh thu theo tháng -->
+				<div class="card mt-5 shadow-sm">
+					<div class="card-header bg-success text-white fw-bold">Biểu đồ
+						Doanh Thu Theo Tháng</div>
+					<div class="card-body">
+						<canvas id="revenueChart" height="150"></canvas>
+					</div>
+				</div>
+
+				<!-- Chart.js -->
+				<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+				<script th:inline="javascript">
+				/*<![CDATA[*/
+				const ctx = document.getElementById('revenueChart').getContext(
+						'2d');
+
+				// Dữ liệu từ controller
+				const labels = /*[[${revenueLabels}]]*/[];
+				const data = /*[[${revenueData}]]*/[];
+
+				const revenueChart = new Chart(ctx, {
+					type : 'line',
+					data : {
+						labels : labels,
+						datasets : [ {
+							label : 'Doanh Thu (VNĐ)',
+							data : data,
+							backgroundColor : 'rgba(25, 135, 84, 0.2)',
+							borderColor : 'rgba(25, 135, 84, 1)',
+							borderWidth : 2,
+							tension : 0.3,
+							fill : true,
+							pointRadius : 5,
+							pointBackgroundColor : 'rgba(25, 135, 84,1)'
+						} ]
+					},
+					options : {
+						responsive : true,
+						plugins : {
+							legend : {
+								display : true,
+								position : 'top'
+							}
+						},
+						scales : {
+							y : {
+								beginAtZero : true,
+								ticks : {
+									callback : function(value) {
+										return value.toLocaleString() + '₫';
+									}
+								}
+							}
+						}
+					}
+				});
+				/*]]>*/
+			</script>
+
+			</div>
+
+			<script
+				th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+		</body>
+
+	</html>

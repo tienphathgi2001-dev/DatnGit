@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Quản Lý Tin Tức</title>
+<link
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css}"
+	rel="stylesheet">
+<link
+	th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}"
+	rel="stylesheet">
+<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f8f9fa;
+	margin: 0;
+	display: flex;
+}
+/* User dropdown */
+.dropdown .btn-secondary {
+	background-color: #198754;
+	border: none;
+	font-weight: 500;
+	padding: 6px 14px;
+	border-radius: 8px;
+}
+
+.dropdown .btn-secondary:hover {
+	background-color: #145c32;
+}
+/* Sidebar */
+.sidebar {
+	width: 250px;
+	background: linear-gradient(180deg, #198754 0%, #157347 100%);
+	color: #fff;
+	height: 100vh;
+	position: fixed;
+	padding-top: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.sidebar .navbar-brand img {
+	max-height: 55px;
+	margin-bottom: 20px;
+	border-radius: 10px;
+}
+
+.sidebar .nav-link {
+	font-weight: 500;
+	color: #e9ecef;
+	padding: 12px 18px;
+	display: flex;
+	align-items: center;
+	border-radius: 8px;
+	margin: 4px 8px;
+	transition: 0.25s;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+	background-color: #fff;
+	color: #198754;
+	font-weight: 600;
+}
+
+.sidebar .nav-link i {
+	margin-right: 10px;
+	font-size: 1.1rem;
+}
+
+/* Content */
+.content {
+	margin-left: 250px;
+	padding: 20px;
+	flex: 1;
+}
+
+.topbar {
+	background: #fff;
+	padding: 15px 20px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* Buttons */
+.btn-action {
+	font-size: 14px;
+	padding: 5px 10px;
+	border-radius: 8px;
+}
+
+.btn-edit {
+	background: #0d6efd;
+	color: #fff;
+}
+
+.btn-edit:hover {
+	background: #0b5ed7;
+}
+
+.btn-delete {
+	background: #dc3545;
+	color: #fff;
+}
+
+.btn-delete:hover {
+	background: #bb2d3b;
+}
+
+table thead {
+	background-color: #198754;
+	color: white;
+}
+
+table tbody tr:hover {
+	background-color: #f1f3f4;
+}
+
+.pagination {
+	justify-content: center;
+	flex-wrap: wrap;
+	margin: 20px 0;
+}
+
+.pagination .page-item .page-link {
+	color: #198754;
+	border: 1px solid #dee2e6;
+	margin: 0 4px;
+	border-radius: 8px;
+	padding: 6px 12px;
+	font-weight: 500;
+	transition: all 0.2s ease-in-out;
+}
+
+.pagination .active .page-link {
+	background: #198754;
+	border-color: #198754;
+	color: #fff;
+}
+
+.pagination .page-link:hover {
+	background-color: #f1f3f5;
+	border-color: #198754;
+	color: #157347;
+}
+
+/* Logo */
+.logo-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 25px;
+	padding: 15px;
+}
+
+.logo-img {
+	width: 120px;
+	height: auto;
+	border-radius: 12px;
+	object-fit: cover;
+	transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+	transform: scale(1.1);
+}
+
+/* Search box */
+.search-box {
+	width: 100%;
+	max-width: 700px;
+	margin-bottom: 20px;
+}
+
+.search-box input {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.search-box button {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+</style>
+</head>
+<body>
+
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<a th:href="@{/}"
+			class="navbar-brand text-center d-block logo-container"> <img
+			th:src="@{/img/logo.png}" alt="F6Shop" class="logo-img">
+		</a>
+		<ul class="nav flex-column mt-3">
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/admin/index}"><i class="fas fa-home"></i> Trang chủ</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/admin/category/list}"><i class="fas fa-list"></i>
+					Loại sản phẩm</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/admin/product/list/1}"><i class="fas fa-box"></i>
+					Sản phẩm</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/admin/account/list/1}"><i
+					class="fa-solid fa-circle-user"></i> Người dùng</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/admin/order}"><i class="fas fa-file-invoice-dollar"></i>
+					Hóa đơn</a></li>
+			<li class="nav-item"><a class="nav-link active"
+				th:href="@{/admin/news}"><i class="fas fa-newspaper"></i> Tin
+					tức</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/admin/thongke}"><i class="fas fa-chart-line"></i>
+					Thống kê</a></li>
+		</ul>
+		<div class="mt-auto p-3">
+			<div class="dropdown text-center">
+				<span class="btn btn-secondary dropdown-toggle w-100"
+					id="loggedInUserDropdown" data-bs-toggle="dropdown"
+					aria-expanded="false" th:text="${session.fullName}"></span>
+				<ul class="dropdown-menu" aria-labelledby="loggedInUserDropdown">
+					<li><a class="dropdown-item" th:href="@{/logout}">Đăng
+							Xuất</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- Main Content -->
+	<div class="content">
+		<!-- Topbar -->
+		<div class="topbar">
+			<h5 class="mb-0 fw-bold text-success">📄 Quản Lý Tin Tức</h5>
+			<a class="btn btn-success shadow-sm" th:href="@{/admin/news/add}">
+				<i class="fas fa-plus"></i> Thêm Tin Tức
+			</a>
+		</div>
+
+		<!-- Search -->
+		<div class="input-group search-box">
+			<input type="text" id="searchInput" class="form-control"
+				placeholder="Tìm kiếm tin tức..." onkeyup="searchNews()">
+			<button class="btn btn-success" type="button" onclick="searchNews()">
+				<i class="fas fa-search"></i>
+			</button>
+		</div>
+
+		<!-- Table -->
+		<div class="table-responsive shadow-sm rounded">
+			<table
+				class="table table-bordered table-hover align-middle text-center">
+				<thead>
+					<tr>
+						<th>Tiêu đề</th>
+						<th>Ngày tạo</th>
+						<th>Hành động</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="n : ${newsPage.content}">
+						<td th:text="${n.title}"></td>
+						<td
+							th:text="${#temporals.format(n.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+						<td>
+						<a th:href="@{'/admin/news/edit/' + ${n.id}}"
+							class="btn btn-edit btn-action me-1"> <i class="fas fa-edit"></i> Sửa</a>
+							
+							<form th:action="@{'/admin/news/delete/' + ${n.id}}"
+								method="post" style="display: inline">
+								<button type="submit" class="btn btn-delete btn-action"
+									onclick="return confirm('Bạn có chắc muốn xoá?')"><i class="fas fa-trash"></i> Xoá</button>
+							</form>
+							</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- Pagination -->
+		<div class="d-flex justify-content-center mt-3">
+			<ul class="pagination">
+				<li class="page-item"
+					th:classappend="${currentPage == 0} ? 'disabled'"><a
+					class="page-link"
+					th:href="@{/admin/news(page=${currentPage - 1}, size=5)}">Trước</a>
+				</li>
+				<li class="page-item"
+					th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+					th:classappend="${i == currentPage} ? 'active'"><a
+					class="page-link" th:href="@{/admin/news(page=${i}, size=5)}"
+					th:text="${i + 1}"></a></li>
+				<li class="page-item"
+					th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+					<a class="page-link"
+					th:href="@{/admin/news(page=${currentPage + 1}, size=5)}">Sau</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	</div>
+
+	<script
+		th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+	<script>
+    function confirmDeleteNews() {
+        return confirm("Bạn có chắc chắn muốn xóa tin tức này không?");
+    }
+
+    function searchNews() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let rows = document.querySelectorAll("tbody tr");
+        rows.forEach(row => {
+            let title = row.querySelector("td:first-child").textContent.toLowerCase();
+            row.style.display = title.includes(input) ? "" : "none";
+        });
+    }
+</script>
+
+</body>
+</html>

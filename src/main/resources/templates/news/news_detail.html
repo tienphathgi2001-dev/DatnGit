@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công ty Vật tư Nông nghiệp | Phân bón - Thuốc BVTV - Giống cây trồng</title>
+    <!-- Load Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Load Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Load CSS tùy chỉnh của bạn -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+
+    <style>
+        /* Grid cha */
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            /* responsive */
+            gap: 20px;
+        }
+        /* Mỗi card sản phẩm */
+        
+        .product-card {
+            display: block;
+            /* Cho phép thẻ a bao trọn */
+            text-align: center;
+            border-radius: 15px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        /* Tên, giá, số lượng */
+        
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+        
+        .product-price,
+        .product-quantity {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        
+        .product-price span,
+        .product-quantity span {
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .category-item {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+            height: 240px;
+            /* hoặc tùy chiều cao bạn muốn */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .category-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* ảnh phủ toàn bộ không méo */
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+        
+        .category-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .category-item p {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* nền mờ trắng cho chữ nổi bật */
+            margin: 0;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+        
+        .pagination .page-link {
+            color: #333;
+            border-radius: 8px;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: #f8f9fa;
+            border-color: #bbb;
+            text-decoration: none;
+        }
+        
+        .pagination .active .page-link {
+            background-color: #ff4b2b;
+            border-color: #ff4b2b;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(255, 75, 43, 0.3);
+        }
+        
+        .pagination .disabled .page-link {
+            color: #aaa;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+        
+        #heroCarousel .carousel-item {
+            height: 500px;
+            /* hoặc cao hơn tùy thiết kế */
+        }
+        
+        #heroCarousel .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Giữ tỷ lệ, lấp đầy khung */
+        }
+        /* ========== MAIN CONTENT (NEWS DETAIL) ========== */
+        
+        .news-detail {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .news-detail h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        
+        .news-meta i {
+            color: #ff4b2b;
+            margin-right: 6px;
+        }
+        
+        .news-detail img {
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .news-detail p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #333;
+            margin-top: 15px;
+        }
+        /* ========== COMMENTS ========== */
+        
+        .comment-section {
+            margin-top: 40px;
+        }
+        
+        .comment-section h5 {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff4b2b;
+            padding-left: 10px;
+        }
+        
+        .comment-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+        }
+        
+        .comment-box strong {
+            color: #007bff;
+        }
+        
+        .comment-box small {
+            color: #888;
+            margin-left: 10px;
+            font-size: 0.85rem;
+        }
+        
+        .comment-box div {
+            margin-top: 8px;
+            color: #444;
+        }
+        /* Comment form */
+        
+        .comment-form textarea {
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            resize: none;
+        }
+        
+        .comment-form button {
+            border-radius: 12px;
+            padding: 8px 20px;
+            background: #ff4b2b;
+            border: none;
+            transition: background 0.2s ease;
+        }
+        
+        .comment-form button:hover {
+            background: #e63e20;
+        }
+        /* Icon actions */
+        
+        .icon-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .icon-actions i {
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .icon-actions i:hover {
+            transform: scale(1.2);
+        }
+        
+        .icon-actions .fa-heart {
+            color: #ff4b2b;
+        }
+        
+        .icon-actions .fa-comment {
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <th:block th:include="Common/Header.html"></th:block>
+
+    <!-- Main Content -->
+    <div class="news-detail">
+        <h3 th:text="${news.title}"></h3>
+        <div class="news-meta">
+            <span><i class="far fa-clock"></i> 
+            <span th:text="${#temporals.format(news.createdAt,'dd/MM/yyyy HH:mm')}"></span>
+            </span>
+            <span><i class="fas fa-user"></i> <span th:text="${news.author.fullName}"></span></span>
+        </div>
+
+        <div th:if="${news.image}" class="my-3">
+            <img th:src="${news.image}" style="max-width:100%">
+        </div>
+
+        <p th:utext="${news.content}"></p>
+
+        <!-- Icon actions -->
+        <div class="icon-actions">
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-comment"></i>
+        </div>
+
+        <hr>
+
+        <!-- Comments -->
+        <div class="comment-section">
+            <h5><i class="fas fa-comments"></i> Bình luận</h5>
+            <div th:each="c : ${comments}" class="comment-box">
+                <strong th:text="${c.account.fullName}">User</strong>
+                <small th:text="${#temporals.format(c.createdAt,'dd/MM/yyyy HH:mm')}"></small>
+                <div th:utext="${c.content}"></div>
+            </div>
+
+            <!-- Form comment -->
+            <form th:action="@{'/news/' + ${news.id} + '/comment'}" method="post" class="comment-form mt-3">
+                <textarea class="form-control" name="content" rows="3" placeholder="Nhập bình luận..."></textarea>
+                <button class="btn btn-primary mt-2"><i class="fas fa-paper-plane"></i> Gửi</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <h3>VỀ CHÚNG TÔI</h3>
+                    <p>Công ty Vật tư Nông nghiệp chuyên cung cấp các sản phẩm phân bón, thuốc BVTV, giống cây trồng và vật tư nông nghiệp chất lượng cao.
+                    </p>
+                    <div class="social-links d-flex gap-3 mt-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i
+							class="fab fa-youtube"></i></a> <a href="#"><i
+							class="fab fa-zalo"></i></a> <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>DANH MỤC</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Trang chủ</a></li>
+                        <li class="mb-2"><a href="#">Phân bón</a></li>
+                        <li class="mb-2"><a href="#">Thuốc BVTV</a></li>
+                        <li class="mb-2"><a href="#">Giống cây trồng</a></li>
+                        <li class="mb-2"><a href="#">Vật tư nông nghiệp</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>CHÍNH SÁCH</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Chính sách bảo mật</a></li>
+                        <li class="mb-2"><a href="#">Chính sách vận chuyển</a></li>
+                        <li class="mb-2"><a href="#">Chính sách đổi trả</a></li>
+                        <li class="mb-2"><a href="#">Điều khoản dịch vụ</a></li>
+                        <li class="mb-2"><a href="#">Hướng dẫn mua hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <h3>LIÊN HỆ</h3>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-map-marker-alt mt-1"></i> <span>123 Đường
+							Nông Nghiệp, P. Phú Thọ, TP. Thủ Dầu Một, Bình Dương</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-phone-alt mt-1"></i> <span>0901 234 567 -
+							0909 876 543</span>
+                    </div>
+                    <div class="contact-item d-flex mb-3">
+                        <i class="fas fa-envelope mt-1"></i> <span>info@nongnghiep.vn</span>
+                    </div>
+                    <div class="contact-item d-flex">
+                        <i class="fas fa-clock mt-1"></i> <span>Thứ 2 - Thứ 7: 7:30
+							- 17:30</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright pt-4 mt-4 text-center">
+                <p class="mb-0">&copy; 2023 Công ty Vật tư Nông nghiệp. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

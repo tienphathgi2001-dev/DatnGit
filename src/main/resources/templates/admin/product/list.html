@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css}" rel="stylesheet">
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <title>Admin Dashboard - Quản Lý Sản Phẩm</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #198754 0%, #157347 100%);
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            padding-top: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar .navbar-brand img {
+            max-height: 55px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #e9ecef;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            margin: 4px 8px;
+            transition: 0.25s;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: #fff;
+            color: #198754;
+            font-weight: 600;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Content */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .topbar {
+            background: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Dropdown user */
+        .dropdown .btn-secondary {
+            background-color: #198754;
+            border: none;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+
+        .dropdown .btn-secondary:hover {
+            background-color: #145c32;
+        }
+
+        /* Table */
+        table thead {
+            background-color: #198754;
+            color: white;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f3f4;
+        }
+
+        .btn-action {
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .btn-edit {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background: #0b5ed7;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background: #bb2d3b;
+        }
+
+        /* Pagination */
+        .pagination {
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .pagination .page-item .page-link {
+            color: #198754;
+            border: 1px solid #dee2e6;
+            margin: 0 4px;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .pagination .active .page-link {
+            background: #198754;
+            border-color: #198754;
+            color: #fff;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #f1f3f5;
+            border-color: #198754;
+            color: #157347;
+        }
+
+        /* Search */
+        .search-box {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .search-box button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Logo */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px;
+        }
+
+        .logo-img {
+            width: 120px;
+            height: auto;
+            border-radius: 12px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a th:href="@{/}" class="navbar-brand text-center d-block logo-container">
+            <img th:src="@{/img/logo.png}" alt="F6Shop" class="logo-img">
+        </a>
+        <ul class="nav flex-column mt-3">
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/index}"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/category/list}"><i class="fas fa-list"></i> Loại sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link active" th:href="@{/admin/product/list/1}"><i class="fas fa-box"></i> Sản phẩm</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/account/list/1}"><i class="fa-solid fa-circle-user"></i> Người dùng</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/order}"><i class="fas fa-file-invoice-dollar"></i> Hóa đơn</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/news}"><i class="fas fa-newspaper"></i> Tin tức</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/admin/thongke}"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+        </ul>
+
+        <div class="mt-auto p-3">
+            <div class="dropdown text-center">
+                <span class="btn btn-secondary dropdown-toggle w-100" id="loggedInUserDropdown" data-bs-toggle="dropdown"
+                      aria-expanded="false" th:text="${session.fullName}"></span>
+                <ul class="dropdown-menu" aria-labelledby="loggedInUserDropdown">
+                    <li><a class="dropdown-item" th:href="@{/logout}">Đăng Xuất</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Top bar -->
+        <div class="topbar">
+            <h5 class="mb-0 fw-bold text-success">📦 Quản Lý Sản Phẩm</h5>
+            <a class="btn btn-success shadow-sm" th:href="@{/admin/product/add}">
+                <i class="fas fa-plus"></i> Thêm Sản Phẩm
+            </a>
+        </div>
+
+        <!-- Search -->
+        <div class="input-group search-box">
+            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchProduct()">
+            <button class="btn btn-success" type="button" onclick="searchProduct()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Hình Ảnh</th>
+                        <th>Giá</th>
+                        <th>Số Lượng</th>
+                        <th>Loại</th>
+                        <th>Trạng thái</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${list}">
+                        <td th:text="${product.id}"></td>
+                        <td th:text="${product.name}"></td>
+                        <td>
+                            <img th:src="@{/img/{image}(image=${product.image != null ? product.image : 'default.png'})}" 
+                                 class="rounded shadow-sm" width="55">
+                        </td>
+                        <td th:text="${product.price} + ' VNĐ'"></td>
+                        <td th:text="${product.quantity}"></td>
+                        <td th:text="${product.category.name}"></td>
+                        <td>
+                            <span th:text="${product.actived ? 'Kích hoạt' : 'Tắt'}"
+                                  th:classappend="${product.actived} ? 'badge bg-success' : 'badge bg-secondary'"></span>
+                        </td>
+                        <td>
+                            <a class="btn btn-edit btn-action me-1" th:href="@{/admin/product/edit/{id}(id=${product.id})}">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a class="btn btn-delete btn-action" th:href="@{/admin/product/delete/{id}(id=${product.id})}" onclick="return confirmDeleteProduct();">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center flex-wrap mt-4">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/product/list/1}">Đầu</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/product/list/{pageNo}(pageNo=${currentPage - 1})}">Trước</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/product/list/{pageNo}(pageNo=${i})}" th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/product/list/{pageNo}(pageNo=${currentPage + 1})}">Tiếp</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/product/list/{pageNo}(pageNo=${totalPages})}">Cuối</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        function confirmDeleteProduct() {
+            return confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
+        }
+
+        function searchProduct() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                let name = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+                row.style.display = name.includes(input) ? "" : "none";
+            });
+        }
+    </script>
+</body>
+</html>
